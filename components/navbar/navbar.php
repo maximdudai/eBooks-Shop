@@ -13,9 +13,13 @@
                 <li><a class="nav-link profile-item" href="#">My Cart <i class="bi bi-cart"></i></a></li>
                 <li><a class="nav-link profile-item" href="#">Settings <i class="bi bi-gear"></i></a></li>
                 <li><a class="nav-link profile-item" href="#">Support <i class="bi bi-info-circle"></i></a></li>
+
                 <li>
-                    <li><a class="nav-link profile-item" id="logout-btn" href="../../../shop/components/navbar/logout.php">Log Out <i class="bi bi-box-arrow-left"></i></a></li>
+                    <br />
+                    '.(($_SESSION['isAdmin']) ? ('<a class="m-1 nav-link profile-item" id="admincp-btn" href="#">Admin CP <i class="bi bi-shield-slash-fill"></i></a>') : ('')) .'
+                    <a class="nav-link profile-item justify-content-center align-items-center" id="logout-btn" href="../../../shop/components/navbar/logout.php">Log Out <i class="bi bi-box-arrow-left"></i></a>
                 </li>
+
             </ul>
         </div>
         ';

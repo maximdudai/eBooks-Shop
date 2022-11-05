@@ -25,12 +25,23 @@
     }
 
     #logout-btn {
-        background-color: rgba(0, 0, 0, .50);
+        background-color: #dd7973;
         color: white;
         width: 100%;
         padding: 5px;
         border: 0;
         border-radius: 5px;
         font-weight: 600;
+    }
+    #logout-btn i {
+        background-color: white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        font-size: .8rem;
+        text-align: center;
+    }
+    .profile-item i {
+        color: #80669d;
     }
 </style>
