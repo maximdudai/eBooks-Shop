@@ -1,12 +1,33 @@
 <?php error_reporting(E_ERROR | E_PARSE);
     session_start();
 
-    include('../../connection/database.php');
-    
+    require('../../connection/database.php');
+    require_once('../../components/notify/notify.php');
+
     $searchLivro = mysqli_real_escape_string($sql, $_POST['search_book']);
 
     if(isset($_POST['clearSearch'])) {
         header("Location: library.php");
+    }
+
+    if(isset($_POST['toFavorites'])) {
+        $book_id = $_SESSION['bookID'];
+        echo $book_id;
+
+        $con = mysqli_query($sql, "SELECT `bookID` FROM `favorites` WHERE `bookID` = '$book_id'");
+        $result = mysqli_num_rows($con);
+ 
+        if($result)
+        {
+            displayNotify('This book already exists on your watchlist.');
+        } 
+        else 
+        {
+            $sql_id = $_SESSION['sqlID'];
+
+            mysqli_query($sql, "INSERT INTO `favorites` (userID, bookID) VALUES ('$sql_id', '$book_id')");            
+            displayNotify('Your list updated ✅');
+        }
     }
 
 ?>
@@ -38,7 +59,7 @@
                     if($result) {
                         while($row = mysqli_fetch_array($qry)) {
                             echo '
-                            <div class="livro m-5 align-items-center col-md-10">
+                            <div class="livro m-5 align-items-center col-md-10" id="'.$row['ID'].'">
                                     <div class="col">
                                         <div class="img d-flex flex-column justify-content-center align-items-center">
                                             <img src="../../images/livro'.$row['ID'].'.jpg" class="img img-fluid" alt="livro-img">
@@ -56,8 +77,12 @@
 
                                     <div class="col">
                                         <div class="buttons d-grid gap-2 col-6 mx-auto">
-                                            <input type="button" value="Add to Cart" class="btn btn-outline-success '.(!$_SESSION['loggedIn'] ? ('disabled') : ('')).'">
-                                            <input type="button" value="Add to Favorites" class="btn btn-outline-danger '.(!$_SESSION['loggedIn'] ? ('disabled') : ('')).'">
+                                            <form action="library.php" method="post">
+                                                <input type="submit" value="Add to Cart" class="btn btn-outline-success '.(!$_SESSION['loggedIn'] ? ('disabled') : ('')).'" >
+                                                <input type="submit" value="Add to Favorites" name="toFavorites" class="btn btn-outline-danger '.(!$_SESSION['loggedIn'] ? ('disabled') : ('')).'
+                                                    onclick="'.$_SESSION['bookID'] = $row['ID'].'"
+                                                ">
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

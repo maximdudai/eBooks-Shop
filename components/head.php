@@ -47,5 +47,14 @@
                 font-weight: bold;
                 border-bottom: 1px solid black;
             }
+
+            .toast {
+                position: fixed;
+                bottom: 5px;
+                left: 5px;
+                right: 50;
+                z-index: 2025;
+                font-weight: 600;
+            }
     </style>
 </head>
