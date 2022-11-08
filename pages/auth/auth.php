@@ -18,12 +18,6 @@
 
             insertUser($sql, $userName, $userLastName, $userMail, $userPassword);
 
-            $_SESSION['loggedIn'] = true;
-            $_SESSION['f_name'] = $userName;
-            $_SESSION['l_name'] = $userLastName;
-            $_SESSION['userMail'] = $userMail;
-            updateVars($userName, $userLastName, $userMail, $userPassword, true);
-
             header('location: ../../index.php');
             die();
         }
@@ -33,7 +27,10 @@
     }
 
     function insertUser($con, $user_fName, $user_lName, $userMail, $userPass) {
-        mysqli_query($con, "INSERT INTO `users` (fName, lName, password, email) VALUES ('$user_fName', '$user_lName', '$userPass', '$userMail')");
+        $ins = mysqli_query($con, "INSERT INTO `users` (fName, lName, password, email) VALUES ('$user_fName', '$user_lName', '$userPass', '$userMail')");
+        
+
+        updateVars(mysqli_insert_id($con), $user_fName, $user_lName, $userMail, $userPass, 0, true);
     }
 
     function checkLogin($con, $mail, $pass) {
@@ -53,12 +50,13 @@
         }
     }
 
-    function updateVars($sqlid = null, $name = '', $lname = '', $mail = '', $pass = '', $isAdmin = false, $loggedIn = false) {
+    function updateVars($sqlid, $name, $lname, $mail, $pass, $isAdmin, $loggedIn) {
         $_SESSION['sqlID'] = $sqlid;
         $_SESSION['loggedIn'] = $loggedIn;
         $_SESSION['f_name'] = $name;
         $_SESSION['l_name'] = $lname;
         $_SESSION['userMail'] = $mail;
+        $_SESSION['userPass'] = $pass;
         $_SESSION['isAdmin'] = $isAdmin;
     }
 

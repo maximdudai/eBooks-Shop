@@ -1,4 +1,14 @@
 <style>
+    .buttons .btn {
+        margin: 0 10px;
+    }
+    .btn a {
+        color: black;
+    }
+    .btn a:hover {
+        color: black;
+    }
+
     .livro {
         margin: 5px;
         border-radius: 5px;
