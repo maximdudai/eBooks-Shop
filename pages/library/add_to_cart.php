@@ -15,7 +15,7 @@
         if(!empty($book_id)) {
             $sql_id = $_SESSION['sqlID'];
 
-            $con = mysqli_query($sql, "SELECT `bookID` FROM `favorites` WHERE `bookID` = '$book_id' AND `userID` = '$sql_id'");
+            $con = mysqli_query($sql, "SELECT `book_id` FROM `user_cart` WHERE `book_id` = '$book_id' AND `user_id` = '$sql_id'");
             $result = mysqli_num_rows($con);
 
             if($result)
@@ -25,7 +25,7 @@
             } 
             else 
             {
-                mysqli_query($sql, "INSERT INTO `favorites` (userID, bookID, bookPrice, bookName) VALUES ('$sql_id', '$book_id', '$book_price', '$book_name')");            
+                mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_name) VALUES ('$sql_id', '$book_id', '$book_price', '$book_name')");            
                 displayNotify('Your list updated ✅');
             }
         }
@@ -50,9 +50,9 @@
                     <li class="list-group-item disabled">Your Orders <span class="float-end"><i class="bi bi-cart-check"></i></span></li>
 
                     <?php
-                        $userID = $_SESSION['sqlID'];
+                        $user_id = $_SESSION['sqlID'];
 
-                        $con = mysqli_query($sql, "SELECT * FROM `favorites` WHERE `userID` = '$userID'");
+                        $con = mysqli_query($sql, "SELECT * FROM `user_cart` WHERE `user_id` = '$user_id'");
                         $res = mysqli_num_rows($con);
                         
                         $totalPrice = 0;
@@ -63,15 +63,15 @@
                                 $formatList = '
                                     <li class="list-group-item">
                                         <form method="get">
-                                            '.$row['bookName'].' &mdash;
-                                            <span>'.strval($row['bookPrice']).'€</span>
-                                            <span class="deleteBtn float-end"><a href="delete_book.php?book_id='.$row['bookID'].'&user_id='.$_SESSION['sqlID'].'"><i class="bi bi-trash3-fill"></i></a></span>
+                                            '.$row['book_name'].' &mdash;
+                                            <span>'.strval($row['book_price']).'€</span>
+                                            <span class="deleteBtn float-end"><a href="delete_book.php?book_id='.$row['book_id'].'&user_id='.$_SESSION['sqlID'].'"><i class="bi bi-trash3-fill"></i></a></span>
                                         </form>
                                     </li>
                                 ';
                                 echo $formatList;
 
-                                $totalPrice += $row['bookPrice'];
+                                $totalPrice += $row['book_price'];
                             }
                             $showAmount = '
                                 <li class="list-group-item disabled">Total Amount <span class="float-end">'.$totalPrice.'€</span> </li>
