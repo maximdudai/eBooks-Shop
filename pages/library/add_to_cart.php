@@ -17,7 +17,6 @@
 
             $con = mysqli_query($sql, "SELECT `book_id` FROM `user_cart` WHERE `book_id` = '$book_id' AND `user_id` = '$sql_id'");
             $result = mysqli_num_rows($con);
-
             if($result)
             {
                 header("Location: library.php");
