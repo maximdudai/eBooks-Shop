@@ -1,7 +1,10 @@
 // finish order
 let finishBtn = document.getElementById("finishPayment");
 finishBtn.addEventListener("click", (e) => {
-    console.log('da man');
+
     e.preventDefault();
+
+    document.getElementById("paymentForm").classList.toggle("d-none");
+    document.getElementById("backToShop").classList.toggle("d-none");
 
 });

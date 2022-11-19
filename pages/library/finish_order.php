@@ -14,8 +14,24 @@
         require('../../components/head.php');
         require('./finish_order_style.php');
 
-        if($_SERVER['REQUEST_MEHTOD'] == 'GET') {
+        if($_SERVER["REQUEST_METHOD"] == 'GET') {
             $totalPrice = $_GET['total_price'];
+        }
+
+        
+        $user_sql = $_SESSION['sqlID'];
+        if(isset($_GET['shopping'])) {
+            clearCart($sql, $_SESSION['sqlID']);
+            header("Location: ../../../shop/pages/library/library.php");
+            die();
+        }
+        if(isset($_GET['contactTeam'])) {
+            clearCart($sql, $_SESSION['sqlID']);
+            header("Location: ../../../shop/pages/contact/contact.php");
+            die();
+        }
+        function clearCart($con, $s_id) {
+            mysqli_query($con, "DELETE FROM `user_cart` WHERE `user_id` = $s_id");
         }
 
     ?>
@@ -23,7 +39,7 @@
     
     <?php require('../../components/navbar/navbar.php'); ?>
 
-    <section class="finishOrder d-none">
+    <section class="finishOrder" id="paymentForm">
         <div class="container w-50">
             <div class="row">
                 <div class="totalPrice col-md-5">
@@ -31,30 +47,21 @@
                 </div>
             </div>
             <div class="payData row justify-content-center align-items-center">
-                <form class="row g-3 needs-validation" novalidate>
+                <form method="get" class="row g-3 needs-validation">
 
                     <div class="col-md-4">
                         <label for="validationCustom01" class="form-label">First name</label>
                         <input type="text" class="form-control" id="validationCustom01" value="<?php echo $_SESSION['f_name'] ?>" required>
-                        <div class="valid-feedback">
-                        Looks good!
-                        </div>
                     </div>
 
                     <div class="col-md-4">
                         <label for="validationCustom02" class="form-label">Last name</label>
                         <input type="text" class="form-control" id="validationCustom02" value="<?php echo $_SESSION['l_name'] ?>" required>
-                        <div class="valid-feedback">
-                        Looks good!
-                        </div>
                     </div>
 
                     <div class="col-md-4">
                         <label for="validationCustom03" class="form-label">Phone Nr.</label>
                         <input type="tel" class="form-control" id="validationCustom03" required>
-                        <div class="valid-feedback">
-                        Looks good!
-                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -62,18 +69,12 @@
                         <div class="input-group has-validation">
                             <span class="input-group-text" id="inputGroupPrepend">@</span>
                             <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" value="<?php echo $_SESSION['userMail'] ?>" required>
-                            <div class="invalid-feedback">
-                                Please choose a email.
-                            </div>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <label for="validationCustom03" class="form-label">City</label>
                         <input type="text" class="form-control" id="validationCustom03" required>
-                        <div class="invalid-feedback">
-                        Please provide a valid city.
-                        </div>
                     </div>
 
                     <div class="col-md-4">
@@ -86,17 +87,11 @@
                             <option value="Braga">Braga</option>
                             <option value="Algarve">Algarve</option>
                         </select>
-                        <div class="invalid-feedback">
-                        Please select a valid state.
-                        </div>
                     </div>
 
                     <div class="col-md-4">
                         <label for="validationCustom05" class="form-label">Zip</label>
                         <input type="text" class="form-control" id="validationCustom05" required>
-                        <div class="invalid-feedback">
-                        Please provide a valid zip.
-                        </div>
                     </div>
 
                     <div class="col-md-4">
@@ -127,21 +122,17 @@
                         <label class="form-check-label" for="invalidCheck">
                             Agree to terms and conditions
                         </label>
-                        <div class="invalid-feedback">
-                            You must agree before submitting.
-                        </div>
                         </div>
                     </div>
 
-                    <div class="col-12">
-                        <button class="btn btn-primary float-end" id="finishPayment" type="submit">FINISH ORDER</button>
-                    </div>
+                        <input type="submit" id="finishPayment" name="orderPressed" value="Finish Payment">
+                        <!-- <button type="submit" class="btn btn-primary btn-sm" id="finishPayment">FINISH ORDER</button> -->
                 </form>
             </div>
         </div>
     </section>
 
-    <section class="orderFinished">
+    <section class="orderFinished d-none" id="backToShop">
         <div class="container">
             <div class="row text-center justify-content-center">
                 <div class="infoMsg col-md-6">
@@ -156,7 +147,9 @@
             <div class="chooseOption row text-center justify-content-center">
                 <div class="col-md-4">
                     <p>Order Number: #<?php echo rand(1234, 4321); ?></p>
-                    <a class="continueShopping" href="./library.php">CONTINUE SHOPPING</a>
+                    <form>
+                        <input type="submit" class="btnFinishOrder shopping" name="shopping" value="continue shopping">
+                    </form>
                 </div>
                 <div class="col-md-4">
                     <p>
@@ -165,13 +158,15 @@
                             echo date("Y/m/d");
                         ?>
                     </p>
-                    <a class="contactUs" href="../../../shop/pages/contact/contact.php">CONTACT OUR TEAM</a>
+                    <form>
+                        <input type="submit" class="btnFinishOrder contactUs" name="contactTeam" value="contact our team">
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <?php require('../../components/footer/footer.php'); ?>
+    <?php require('../../../shop/components/footer/footer.php'); ?>
     <script src="./finishOrder.js"></script>
 </body>
 </html>

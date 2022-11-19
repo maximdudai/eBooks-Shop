@@ -16,7 +16,7 @@
 
                 <li>
                     <br />
-                    '.(($_SESSION['isAdmin']) ? ('<a class="m-1 nav-link profile-item" id="admincp-btn" href="#">Admin CP <i class="bi bi-shield-slash-fill"></i></a>') : ('')) .'
+                    '.(($_SESSION['isAdmin']) ? ('<a class="m-1 nav-link profile-item" id="admincp-btn" href="../../../shop/pages/admin/admin.php">Admin CP <i class="bi bi-shield-slash-fill"></i></a>') : ('')) .'
                     <a class="nav-link profile-item justify-content-center align-items-center" id="logout-btn" href="../../../shop/components/navbar/logout.php">Log Out <i class="bi bi-box-arrow-left"></i></a>
                 </li>
 

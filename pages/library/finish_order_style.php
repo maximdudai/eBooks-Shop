@@ -34,11 +34,16 @@
     .chooseOption {
         margin-top: 5%;
     }
-    .chooseOption a {
-        background-color: #434343;
-        color: white;
-        padding: 10px 20px;
+
+    /* order finished */
+    .btnFinishOrder {
         border: 0;
+        background: #434343;
+        padding: 10px 20px;
+        color: white;
+        font-size: 1rem;
+        text-transform: uppercase;
         letter-spacing: 1.5px;
+        border-radius: 5px;
     }
 </style>

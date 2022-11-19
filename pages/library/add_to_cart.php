@@ -45,7 +45,7 @@
     <section class="cartBooks">
         <div class="container">
             <div class="row justify-content-center align-items-center">
-                <ul class="list-group w-50">
+                <ul class="list-group">
                     <li class="list-group-item disabled">Your Orders <span class="float-end"><i class="bi bi-cart-check"></i></span></li>
 
                     <?php
@@ -61,11 +61,9 @@
                             while($row = mysqli_fetch_array($con)) {
                                 $formatList = '
                                     <li class="list-group-item">
-                                        <form method="get">
                                             '.$row['book_name'].' &mdash;
                                             <span>'.strval($row['book_price']).'€</span>
                                             <span class="deleteBtn float-end"><a href="delete_book.php?book_id='.$row['book_id'].'&user_id='.$_SESSION['sqlID'].'"><i class="bi bi-trash3-fill"></i></a></span>
-                                        </form>
                                     </li>
                                 ';
                                 echo $formatList;
@@ -79,7 +77,7 @@
 
                             $payBtn = '
                                 <form method="get">
-                                    <button class="finishOrder btn btn-outline-success btn-sm"> <a href="finish_order.php?total_price='.$totalPrice.'">Finish Order</a> </button>
+                                    <a class="finishOrder btn btn-outline-success btn-sm w-100" href="./finish_order.php?total_price='.$totalPrice.'">Finish Order</a>
                                 </form>
                             ';
                             echo $payBtn;
@@ -94,6 +92,7 @@
                     ?>
                 </ul>
             </div>
+
             <div class="row">
                 <div class="buttons text-center">
                     <br>

@@ -31,8 +31,7 @@
 
     .finishOrder {
         border-radius: 0;
-    }
-    .finishOrder a {
+        font-size: .85rem;
         color: black;
         font-weight: 600;
         letter-spacing: 1.5px;
@@ -40,5 +39,9 @@
     }
     .finishOrder a:hover {
         color: black;
+    }
+
+    .list-group {
+        max-width: 40rem;
     }
 </style>
