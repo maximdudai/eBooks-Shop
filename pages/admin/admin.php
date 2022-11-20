@@ -59,13 +59,16 @@
 
                                     if($res) {
                                         while($row = mysqli_fetch_array($con)) {
+
+                                            $activeNewsLetter = $row['newsletter'] ? ('Active') : ('Inactive');
+
                                             $membersList = '
                                                 <tr>
                                                     <th scope="row">'.$row['ID'].'</th>
                                                     <td>'.$row['fName'].'</td>
                                                     <td>'.$row['lName'].'</td>
                                                     <td>'.$row['email'].'</td>
-                                                    <td>'.$row['newsletter'].'</td>
+                                                    <td>'.$activeNewsLetter.'</td>
                                                     <td>'.$row['reg_time'].'</td>
                                                     <td><a href="./manage/change_user.php?manage_user='.$row['ID'].'"><i class="bi bi-sliders"></i></a></td>
                                                 </tr>

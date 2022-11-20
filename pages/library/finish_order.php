@@ -20,6 +20,8 @@
 
         
         $user_sql = $_SESSION['sqlID'];
+        
+
         if(isset($_GET['shopping'])) {
             clearCart($sql, $_SESSION['sqlID']);
             header("Location: ../../../shop/pages/library/library.php");
@@ -30,7 +32,19 @@
             header("Location: ../../../shop/pages/contact/contact.php");
             die();
         }
+
         function clearCart($con, $s_id) {
+            $query = mysqli_query($con, "SELECT * FROM `user_cart` WHERE `user_id` = $s_id");
+            $rows = mysqli_num_rows($query);
+            if($rows) {
+                while($row = mysqli_fetch_array($query)) {
+                    $bookID = $row['book_id'];
+                    $bookName = $row['book_name'];
+
+                    mysqli_query($con, "INSERT INTO `user_orders` (userID, bookID, bookName) VALUES ('$s_id', '$bookID', '$bookName')");
+                }
+            }
+
             mysqli_query($con, "DELETE FROM `user_cart` WHERE `user_id` = $s_id");
         }
 
