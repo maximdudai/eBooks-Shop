@@ -44,7 +44,6 @@
                     mysqli_query($con, "INSERT INTO `user_orders` (userID, bookID, bookName) VALUES ('$s_id', '$bookID', '$bookName')");
                 }
             }
-
             mysqli_query($con, "DELETE FROM `user_cart` WHERE `user_id` = $s_id");
         }
 
