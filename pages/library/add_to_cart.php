@@ -19,6 +19,7 @@
             $result = mysqli_num_rows($con);
             if($result)
             {
+                displayNotify('Your list updated ✅');
                 header("Location: library.php");
                 die();
             } 
