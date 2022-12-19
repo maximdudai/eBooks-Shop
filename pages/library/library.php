@@ -30,17 +30,24 @@
         // mysqli_query($sql, "INSERT INTO `user_cart` () VALUES ()");
     }
 
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if(isset($_POST['addToCart'])) {
-            // echo $_POST['bookNumber']; 
-            
-            $book_id = $_POST['ID'];
-            $book_price = $_POST['livroPrice'];
-            $book_name = $_POST['livroName'];
-            $book_amount = $_POST['bookNumber'];
+    if($_SERVER['REQUEST_METHOD'] == 'GET') {
+        
 
-            addItemToCart($sql, $book_id, $book_price, $book_name, $book_amount);
+        $bName = $_GET['book_name'];
+        // book_price
+        echo $bName;
+
+        if(isset($_POST['addToCart'])) {
+    
+            // $book_id = $_POST['ID'];
+            // $book_price = $_POST['livroPrice'];
+            // $book_name = $_SESSION['bookClickedFromList'];
+            // $book_amount = $_POST['bookNumber'];
+
+
+            // addItemToCart($sql, $book_id, $book_price, $book_name, $book_amount);
         }
+
     }
 ?>
 <!DOCTYPE html>
@@ -68,13 +75,25 @@
                 <form action="library.php" method="post">
                     <label for="bookCategory">Choose by category:</label>
                     <select id="bookCategory" name="bookTypeSelected" onchange="reloadPageWithCategory();">
-                        <option value="None" disabled selected>Select...</option>
-                        <option value="0">TODOS</option>
-                        <option value="1">CULINÁRIA E VINHOS</option>
-                        <option value="2">LITERATURA E FICÇÃO</option>
-                        <option value="3">INFANTIS E JUVENIS</option>
-                        <option value="4">BANDA DESENHADA E MANGA</option>
+                        <option value="None" disabled selected>Select Item..</option>
+                        <option value="0">Todos</option>
+                        <?php 
+                            $sendQuery = mysqli_query($sql, "SELECT * FROM `categories`");
+                            $getResult = mysqli_num_rows($sendQuery);
+
+                            if($getResult) 
+                            {
+                                while($rows = mysqli_fetch_array($sendQuery))
+                                {
+                                    echo '
+                                        <option value="'.$rows['ID'].'">'.$rows['category_name'].'</option>
+                                    ';
+                                }
+                            }
+                        ?>
                     </select>
+
+
                     <input class="d-none" type="submit" value="" id="submitCategory">
                 </form>
             </div>
@@ -85,88 +104,78 @@
             <div class="text-center p-0">
                 <div class="row justify-content-center">
                     <ul class="book-list">
-                        <?php
+                        <form method="GET">
 
-                            $databaseQuery = "SELECT * FROM `stock` ORDER BY `ID`";
-                            
-                            if($searchLivro) {
-                                $databaseQuery = "SELECT * FROM `stock` WHERE lower(`livroName`) like '%$searchLivro%'";
-                            }
-                            if($bookCategoryID) {
-                                $databaseQuery = "SELECT * FROM `stock` WHERE `livroCategory` = '$bookCategoryID'";
-                            }
+                            <?php
 
-                            $bookQuery = mysqli_query($sql, $databaseQuery);
-                            $queryResult = mysqli_num_rows($bookQuery);
+                                $databaseQuery = "SELECT * FROM `stock` ORDER BY `ID`";
+                                
+                                if($searchLivro) {
+                                    $databaseQuery = "SELECT * FROM `stock` WHERE lower(`livroName`) like '%$searchLivro%'";
+                                }
+                                if($bookCategoryID) {
+                                    $databaseQuery = "SELECT * FROM `stock` WHERE `livroCategory` = '$bookCategoryID'";
+                                }
 
-                            if($queryResult) {
-                                while($row = mysqli_fetch_array($bookQuery)) {
-                                    echo 
-                                    '
-                                        <li class="list-element" id='.$row['ID'].'>
+                                $bookQuery = mysqli_query($sql, $databaseQuery);
+                                $queryResult = mysqli_num_rows($bookQuery);
 
-                                            <div class="livro d-flex flex-row align-items-center">
-                                                <div class="book-image">
-                                                    <img src="../../images/livro1.jpg" alt=".." class="img-fluid book-png" />
-                                                </div>
+                                if($queryResult) {
+                                    while($row = mysqli_fetch_array($bookQuery)) {
+                                        echo 
+                                        '
+                                            <li class="list-element" id='.$row['ID'].'>
 
-                                                <div class="book d-flex flex-column">
+                                                <div class="livro d-flex flex-row align-items-center">
+                                                    <div class="book-image">
+                                                        <img src="../../images/livro1.jpg" alt=".." class="img-fluid book-png" />
+                                                    </div>
 
-                                                    <div class="title__buttons d-flex flex-row justify-content-between">
-                                                        <div class="book-title">
-                                                            <h3>
-                                                                '.$row['livroName'].' &mdash; '.$row['livroPrice'].'$
-                                                            </h3>
-                                                        </div>
+                                                    <div class="book d-flex flex-column">
 
-                                                        <form method="post">
+                                                        <div class="title__buttons d-flex flex-row justify-content-between">
+                                                            <div class="book-title">
+                                                                <h3>
+                                                                    '.$row['livroName'].' &mdash; '.$row['livroPrice'].'$
+                                                                </h3>
+                                                            </div>
+
                                                             <div class="book-buttons d-flex flex-row">
                                                                 <div class="add-to-cart m-1">
-                                                                    <input class="btn btn-outline-warning" type="submit" name="addToCart" value="ADD TO CART" />
+                                                                    <a href="./library.php?book_name='.$row['livroName'].'&book_price='.$row['livroPrice'].'">
+                                                                        <input class="btn btn-outline-warning" type="submit" name="addToCart" value="ADD TO CART"/>
+                                                                    </a>
                                                                 </div>
 
                                                                 <div class="book-numbers m-1">
                                                                     <input type="number" class="btn" id="bookAmount" name="bookNumber" value="1" min="1" max="10" />
                                                                 </div>
                                                             </div>
-                                                        </form>
+
+                                                        </div>
+
+                                                        <div class="description">
+                                                            <p>
+                                                                '.$row['livroDescription'].'
+                                                            </p>
+                                                        </div>
 
                                                     </div>
-
-                                                    <div class="description">
-                                                        <p>
-                                                            '.$row['livroDescription'].'
-                                                        </p>
-                                                    </div>
-
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <hr />
+                                            </li>
+                                            <hr />
+                                        ';
+                                    }
+                                    if($searchLivro)
+                                        echo '<form method="post"><input class="resetPage" type="submit" value="reset page" name="clearSearch"></form>';
+                                } else {
+                                    echo '
+                                        <h1>Something went wrong 😢</h1>
+                                        <p>There is no book with this parameters</p>
                                     ';
                                 }
-                                if($searchLivro)
-                                    echo '<form method="post"><input class="resetPage" type="submit" value="reset page" name="clearSearch"></form>';
-                            } else {
-                                echo '
-                                    <h1>Something went wrong 😢</h1>
-                                    <p>There is no book with this parameters</p>
-                                ';
-                            }
-
-                                
-                            if($searchLivro) {
-
-                            } else {
-                                
-                                while($row = mysqli_fetch_array($bookQuery)) {
-                                    echo 
-                                    '
-
-                                    ';
-                                }
-                            }
-                        ?>
+                            ?>
+                        </form>
                     </ul>
                 </div>
             </div>
