@@ -25,30 +25,36 @@
 
     function addItemToCart($sql, $bookid, $price, $name, $bookamount) {
 
+        $user_id = $_SESSION['sqlID'];
+        mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_name, book_amount) VALUES ('$user_id', '$bookid', '$price', '$name', '$bookamount')");
 
-
-        // mysqli_query($sql, "INSERT INTO `user_cart` () VALUES ()");
+        displayNotify('Your cart has been updated!');
     }
 
-    if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if($_SERVER['REQUEST_METHOD'] == 'POST') {
         
 
-        $bName = $_GET['book_name'];
-        // book_price
-        echo $bName;
 
-        if(isset($_POST['addToCart'])) {
-    
-            // $book_id = $_POST['ID'];
-            // $book_price = $_POST['livroPrice'];
-            // $book_name = $_SESSION['bookClickedFromList'];
-            // $book_amount = $_POST['bookNumber'];
+        if(isset($_POST['addToCartButton']))
+        {
 
+            $book_id = $_POST['productID'];
 
-            // addItemToCart($sql, $book_id, $book_price, $book_name, $book_amount);
+            $dbQuery = "SELECT * FROM `stock` WHERE `ID` = $book_id";
+            $dbExecuteQuery = mysqli_query($sql, $dbQuery);
+
+            if(mysqli_num_rows($dbExecuteQuery)) {
+
+                $produceAmount = $_POST['productQuantity'];
+
+                while($row = mysqli_fetch_array($dbExecuteQuery)) {
+
+                    addItemToCart($sql, $book_id, $row['livroPrice'], $row['livroName'], $produceAmount);
+                }
+            }
+
         }
-
-    }
+    }   
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,55 +110,55 @@
             <div class="text-center p-0">
                 <div class="row justify-content-center">
                     <ul class="book-list">
-                        <form method="GET">
+                        <?php
 
-                            <?php
+                            $databaseQuery = "SELECT * FROM `stock` ORDER BY `ID`";
+                            
+                            if($searchLivro) {
+                                $databaseQuery = "SELECT * FROM `stock` WHERE lower(`livroName`) like '%$searchLivro%'";
+                            }
+                            if($bookCategoryID) {
+                                $databaseQuery = "SELECT * FROM `stock` WHERE `livroCategory` = '$bookCategoryID'";
+                            }
 
-                                $databaseQuery = "SELECT * FROM `stock` ORDER BY `ID`";
-                                
-                                if($searchLivro) {
-                                    $databaseQuery = "SELECT * FROM `stock` WHERE lower(`livroName`) like '%$searchLivro%'";
-                                }
-                                if($bookCategoryID) {
-                                    $databaseQuery = "SELECT * FROM `stock` WHERE `livroCategory` = '$bookCategoryID'";
-                                }
+                            $bookQuery = mysqli_query($sql, $databaseQuery);
+                            $queryResult = mysqli_num_rows($bookQuery);
 
-                                $bookQuery = mysqli_query($sql, $databaseQuery);
-                                $queryResult = mysqli_num_rows($bookQuery);
+                            if($queryResult) {
+                                while($row = mysqli_fetch_array($bookQuery)) {
+                                    echo 
+                                    '
+                                        <li class="list-element" id='.$row['ID'].'>
 
-                                if($queryResult) {
-                                    while($row = mysqli_fetch_array($bookQuery)) {
-                                        echo 
-                                        '
-                                            <li class="list-element" id='.$row['ID'].'>
+                                            <div class="livro d-flex flex-row align-items-center">
+                                                <div class="book-image">
+                                                    <img src="../../images/livro1.jpg" alt=".." class="img-fluid book-png" />
+                                                </div>
 
-                                                <div class="livro d-flex flex-row align-items-center">
-                                                    <div class="book-image">
-                                                        <img src="../../images/livro1.jpg" alt=".." class="img-fluid book-png" />
-                                                    </div>
+                                                <div class="book d-flex flex-column">
 
-                                                    <div class="book d-flex flex-column">
+                                                    <div class="title__buttons d-flex flex-row justify-content-between">
+                                                        <div class="book-title">
+                                                            <h3>
+                                                                '.$row['livroName'].' &mdash; '.$row['livroPrice'].'$
+                                                            </h3>
+                                                        </div>
 
-                                                        <div class="title__buttons d-flex flex-row justify-content-between">
-                                                            <div class="book-title">
-                                                                <h3>
-                                                                    '.$row['livroName'].' &mdash; '.$row['livroPrice'].'$
-                                                                </h3>
-                                                            </div>
+                                                        <div class="book-buttons d-flex flex-row">
+                                                            <div class="add-to-cart m-1">
+                                                            
+                                                                <form method="post" action="library.php?user_cart">
+                                                                    <input name="productQuantity" type="number" value="1" min="1" max="10" />
+                                                                    <input type="hidden" name="productID" value="'.$row['ID'].'">
+                                                                    <input name="addToCartButton" type="submit" id="'.$row['ID'].'" value="Add To Cart" name="addToCart" />
+                                                                </form>
 
-                                                            <div class="book-buttons d-flex flex-row">
-                                                                <div class="add-to-cart m-1">
-                                                                    <a href="./library.php?book_name='.$row['livroName'].'&book_price='.$row['livroPrice'].'">
-                                                                        <input class="btn btn-outline-warning" type="submit" name="addToCart" value="ADD TO CART"/>
-                                                                    </a>
-                                                                </div>
 
-                                                                <div class="book-numbers m-1">
-                                                                    <input type="number" class="btn" id="bookAmount" name="bookNumber" value="1" min="1" max="10" />
-                                                                </div>
                                                             </div>
 
                                                         </div>
+
+                                                    </div>
 
                                                         <div class="description">
                                                             <p>
@@ -175,7 +181,6 @@
                                     ';
                                 }
                             ?>
-                        </form>
                     </ul>
                 </div>
             </div>

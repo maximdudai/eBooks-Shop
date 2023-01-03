@@ -9,7 +9,7 @@
         
         mysqli_query($sql, "DELETE FROM `user_cart` WHERE `book_id` = '$book_id' AND `user_id` = '$user_id'");
         
-        header("Location: ./add_to_cart.php");
+        header("Location: ./user_cart.php");
         die();
     }
 ?>

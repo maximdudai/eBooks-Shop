@@ -1,15 +1,15 @@
 
-let HIDE_TIME = 7000;
+let HIDE_TIME = 5000;
 let notifyApp = document.querySelector(".toast");
-let hideTime;
+let isNotificationVisible;
 
 const userNotify = () => {
-    if(hideTime)
+    if(isNotificationVisible)
         return;
 
-    hideTime = setTimeout(() => {
+    isNotificationVisible = setTimeout(() => {
         notifyApp.classList.toggle("show");
-        clearTimeout(hideTime);
+        clearTimeout(isNotificationVisible);
 
     }, HIDE_TIME);
 };
@@ -17,7 +17,7 @@ userNotify();
 
 let btnClose = document.querySelector(".btn-close");
 btnClose.addEventListener("click", () => {
-    if(hideTime) {
-        clearTimeout(hideTime);
+    if(isNotificationVisible) {
+        clearTimeout(isNotificationVisible);
     }
 });

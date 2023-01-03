@@ -18,6 +18,9 @@
         <!-- font awesome -->
         <script src="https://kit.fontawesome.com/95003e81f5.js" crossorigin="anonymous"></script>
 
+        <!-- google icons -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
 
