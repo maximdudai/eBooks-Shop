@@ -52,7 +52,9 @@
                 </div>
 
 
-                <div class="col-lg-5 border border-success p-2 mb-4">
+                <div class="col-lg-5" 
+                     style="overflow: auto; max-height: 60vh;">
+
                     <ul class="m-0 p-0">
                         <?php 
 
@@ -65,15 +67,22 @@
 
                                 while($row = mysqli_fetch_array($sendQuery)) {
                                     echo '
-                                        <li class="d-flex flex-row justify-content-between align-items-center">
-                                           <div class="leftSideContent>
+                                        <li class="d-flex flex-row justify-content-between align-items-center" 
+                                        style="margin: 10px 0;
+                                            border: 1px solid; border-radius: 5px;
+                                                padding: 15px 10px;"
+                                        >
+
+                                           <div class="leftSideContent d-flex flex-row align-items-center">
+                                                <img class"img-thumbnail rounded img-fluid" src="http://localhost/shop/images/livro1.jpg" /> 
                                                 <p class="d-flex flex-column">
-                                                    <span class="book_title">'.$row['book_name'].'</span>
+                                                    <span class="book_title"><b>'.$row['book_name'].'</b></span>
                                                     <span class="book_amount">Amount: '.$row['book_amount'].'</span>
+                                                    <span class="book_price_amount">Total: '.$row['book_amount'] * $row['book_price'].'€</span>
                                                 </p>
                                             </div>
 
-                                            <div class="rightSideContent>
+                                            <div class="rightSideContent">
                                                 <a href="#"><i class="fa-solid fa-trash"></i></a>
                                             </div>
                                         </li>
@@ -91,10 +100,9 @@
             </div>
 
             <div class="row">
-                <div class="buttons text-center">
-                    <br>
-                    <a href="./library.php" class="gotoShop">BACK TO SHOPPING</a>
-                    <br>
+                <div class="buttons text-center d-flex flex-row justify-content-center mt-4">
+                    <a class="btn btn-outline-success m-1" href="./finish_order.php" class="finishOrder">FINISH ORDER</a>
+                    <a class="btn btn-outline-warning m-1" href="./library.php" class="gotoShop">BACK TO SHOPPING</a>
                 </div>
             </div>
         </div>

@@ -26,14 +26,26 @@
     function addItemToCart($sql, $bookid, $price, $name, $bookamount) {
 
         $user_id = $_SESSION['sqlID'];
-        mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_name, book_amount) VALUES ('$user_id', '$bookid', '$price', '$name', '$bookamount')");
+
+        $checkIfAvailable = mysqli_query($sql, "SELECT * FROM `user_cart` WHERE `user_id` = $user_id");
+        
+        if(mysqli_num_rows($checkIfAvailable)) {
+
+            while($row = mysqli_fetch_array($checkIfAvailable)) {
+                $newbook_amount = $row['book_amount'] + $bookamount;
+
+                mysqli_query($sql, "UPDATE `user_cart` SET `book_amount` = $newbook_amount WHERE `user_id` = $user_id");
+            }
+
+
+        } else {
+            mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_name, book_amount) VALUES ('$user_id', '$bookid', '$price', '$name', '$bookamount')");
+        }
 
         displayNotify('Your cart has been updated!');
     }
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        
-
 
         if(isset($_POST['addToCartButton']))
         {
