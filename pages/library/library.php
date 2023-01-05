@@ -27,16 +27,15 @@
 
         $user_id = $_SESSION['sqlID'];
 
-        $checkIfAvailable = mysqli_query($sql, "SELECT * FROM `user_cart` WHERE `user_id` = $user_id");
+
+        $checkIfAvailable = mysqli_query($sql, "SELECT book_id, book_amount, book_price FROM `user_cart` WHERE `user_id` = $user_id AND `book_id` = $bookid");
         
         if(mysqli_num_rows($checkIfAvailable)) {
 
             while($row = mysqli_fetch_array($checkIfAvailable)) {
                 $newbook_amount = $row['book_amount'] + $bookamount;
-
-                mysqli_query($sql, "UPDATE `user_cart` SET `book_amount` = $newbook_amount WHERE `user_id` = $user_id");
+                mysqli_query($sql, "UPDATE `user_cart` SET `book_amount` = $newbook_amount WHERE `book_id` = $bookid");
             }
-
 
         } else {
             mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_name, book_amount) VALUES ('$user_id', '$bookid', '$price', '$name', '$bookamount')");

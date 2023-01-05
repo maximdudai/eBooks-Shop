@@ -6,6 +6,24 @@
     require('../../connection/database.php');
     require_once('../../components/notify/notify.php');
 
+    function getUserTotalPrice($sql, $uid) {
+
+        $totalPrice = 0;
+
+        $formatQuery = "SELECT SUM(book_amount * book_price) FROM `user_cart` WHERE `user_id` = $uid";
+        $executeQuery = mysqli_query($sql, $formatQuery);
+
+        while($row = mysqli_fetch_array($executeQuery)) {
+
+            $totalPrice = $row['SUM(book_amount * book_price)'];
+
+            echo $totalPrice;
+
+        }
+
+        return $totalPrice;
+    }
+
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $book_id = mysqli_real_escape_string($sql, trim($_GET['book_id']));
@@ -41,7 +59,6 @@
     ?>
 <body>
     <?php require('../../components/navbar/navbar.php'); ?>
-
 
     <section class="cartBooks justify-content-center">
         <div class="container align-items-center mt-5">
@@ -97,6 +114,16 @@
 
                 </div>
 
+            </div>
+
+            <div class="row text-center">
+                <p> 
+                    <b>
+                        Total: 
+                        <?php getUserTotalPrice($sql, $_SESSION['sqlID']); ?>
+                        €
+                    </b> 
+                </p>
             </div>
 
             <div class="row">
