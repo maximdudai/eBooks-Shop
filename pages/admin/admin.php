@@ -15,88 +15,67 @@
     
     <?php require('../../components/navbar/navbar.php'); ?>
 
-    <section class="nav-options">
-        <div class="container">
-            <div class="row">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Users</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Books Records</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Categories</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
 
-    <section class="content">
-
-        <div class="container">
-
-            <div class="users active">
-                <div class="row justify-content-center align-items-center">
-
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First Name</th>
-                            <th scope="col">Last Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">NewsLetter</th>
-                            <th scope="col">Register</th>
-                            <th scope="col">Manage</th>
-                        </tr>
-                    </thead>
-                        <tbody>
-                                <?php
-                                    $con = mysqli_query($sql, "SELECT * FROM `users`");
-                                    $res = mysqli_num_rows($con);
-
-                                    if($res) {
-                                        while($row = mysqli_fetch_array($con)) {
-
-                                            $activeNewsLetter = $row['newsletter'] ? ('Active') : ('Inactive');
-
-                                            $membersList = '
-                                                <tr>
-                                                    <th scope="row">'.$row['ID'].'</th>
-                                                    <td>'.$row['fName'].'</td>
-                                                    <td>'.$row['lName'].'</td>
-                                                    <td>'.$row['email'].'</td>
-                                                    <td>'.$activeNewsLetter.'</td>
-                                                    <td>'.$row['reg_time'].'</td>
-                                                    <td><a href="./manage/change_user.php?manage_user='.$row['ID'].'"><i class="bi bi-sliders"></i></a></td>
-                                                </tr>
-                                            ';
-                                            echo $membersList;
-                                        }
-                                    }
-                                ?>
-                        </tbody>
-                    </table>
+    <div class="container hereWeGo">
+        <div class="row justify-content-center align-items-center ">
+            
+            <!-- manage categories -->
+            <div class="card border-success mb-3 m-1 text-center" style="max-width: 18rem;">
+                <div class="card-header bg-transparent border-success">Categories</div>
+                <div class="card-body text-success">
+                    <h5 class="card-title">Manage Categories</h5>
+                    <p class="card-text">
+                        <ul>
+                            <li>Add Categories</li>
+                            <li>Remove Categories</li>
+                            <li>Add Sub Categories</li>
+                            <li>Remove Sub Categories</li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-success">
+                    <a href="#" class="d-flex align-items-center justify-content-center">Manage<span class="material-symbols-outlined">settings</span></a>
                 </div>
             </div>
 
-            <div class="books">
-                <div class="row">
-
+            <!-- manage books -->
+            <div class="card border-success mb-3 m-1 text-center" style="max-width: 18rem;">
+                <div class="card-header bg-transparent border-success">Books</div>
+                <div class="card-body text-success">
+                    <h5 class="card-title">Manage Books</h5>
+                    <p class="card-text">
+                        <ul>
+                            <li>Add Books</li>
+                            <li>Remove Books</li>
+                            <li>Update Books</li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-success">
+                    <a href="#" class="d-flex align-items-center justify-content-center">Manage<span class="material-symbols-outlined">settings</span></a>
                 </div>
             </div>
-
-            <div class="categories">
-                <div class="row">
-
+            
+            <!-- manage users -->
+            <div class="card border-success mb-3 m-1 text-center" style="max-width: 18rem;">
+                <div class="card-header bg-transparent border-success">Users</div>
+                <div class="card-body text-success">
+                    <h5 class="card-title">Manage Users</h5>
+                    <p class="card-text">
+                        <ul>
+                            <li>Registered Users</li>
+                            <li>Users Orders</li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-success">
+                    <a href="#" class="d-flex align-items-center justify-content-center">Manage<span class="material-symbols-outlined">settings</span></a>
                 </div>
             </div>
 
         </div>
-
-    </section>
+    </div>
+    
 
     <?php require('../../components/footer/footer.php'); ?>
 

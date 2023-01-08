@@ -1,7 +1,7 @@
 <style>
 
-    .nav-options {
-        margin-top: 5%;
+    .hereWeGo {
+        margin-top: 10%;
     }
 
 </style>

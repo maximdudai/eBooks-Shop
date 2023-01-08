@@ -8,17 +8,18 @@
 
     function getUserTotalPrice($sql, $uid) {
 
-        $totalPrice = 0;
-
         $formatQuery = "SELECT SUM(book_amount * book_price) FROM `user_cart` WHERE `user_id` = $uid";
         $executeQuery = mysqli_query($sql, $formatQuery);
 
-        while($row = mysqli_fetch_array($executeQuery)) {
+        if(mysqli_num_rows($executeQuery)) {
 
-            $totalPrice = $row['SUM(book_amount * book_price)'];
-
-            echo $totalPrice;
-
+            while($row = mysqli_fetch_array($executeQuery)) {
+                
+                $totalPrice = $row['SUM(book_amount * book_price)'];
+                
+                echo $totalPrice;
+                
+            }
         }
 
         return $totalPrice;
@@ -26,27 +27,33 @@
 
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-        $book_id = mysqli_real_escape_string($sql, trim($_GET['book_id']));
-        $book_price = mysqli_real_escape_string($sql, $_GET['book_price']);
-        $book_name = mysqli_real_escape_string($sql, $_GET['book_name']);
-        
-        if(!empty($book_id)) {
-            $sql_id = $_SESSION['sqlID'];
+        if(isset($_GET['book_id']) && isset($_GET['book_price']) && isset($_GET['book_name'])) {
 
-            $con = mysqli_query($sql, "SELECT `book_id` FROM `user_cart` WHERE `book_id` = '$book_id' AND `user_id` = '$sql_id'");
-            $result = mysqli_num_rows($con);
-            if($result)
-            {
-                displayNotify('Your list updated ✅');
-                header("Location: library.php");
-                die();
-            } 
-            else 
-            {
-                mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_name) VALUES ('$sql_id', '$book_id', '$book_price', '$book_name')");            
-                displayNotify('Your list updated ✅');
+
+            $book_id = mysqli_real_escape_string($sql, trim($_GET['book_id']));
+            $book_price = mysqli_real_escape_string($sql, $_GET['book_price']);
+            $book_name = mysqli_real_escape_string($sql, $_GET['book_name']);
+            
+            if(!empty($book_id)) {
+                $sql_id = $_SESSION['sqlID'];
+
+                $con = mysqli_query($sql, "SELECT `book_id` FROM `user_cart` WHERE `book_id` = '$book_id' AND `user_id` = '$sql_id'");
+                $result = mysqli_num_rows($con);
+                if($result)
+                {
+                    displayNotify('Your list updated ✅');
+                    header("Location: library.php");
+                    die();
+                } 
+                else 
+                {
+                    mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_name) VALUES ('$sql_id', '$book_id', '$book_price', '$book_name')");            
+                    displayNotify('Your list updated ✅');
+                }
             }
         }
+
+
     }
 
 ?>
@@ -64,7 +71,7 @@
         <div class="container align-items-center mt-5">
             <div class="row d-flex flex-column justify-content-center align-items-center">
                 
-                <div class="col-sm-2">
+                <div class="col-sm-2 text-center">
                     <h3>Your Orders</h3>
                 </div>
 
@@ -91,7 +98,7 @@
                                         >
 
                                            <div class="leftSideContent d-flex flex-row align-items-center">
-                                                <img class"img-thumbnail rounded img-fluid" src="http://localhost/shop/images/livro1.jpg" /> 
+                                                <img class="img-fluid" src="http://localhost/shop/images/livro1.jpg" /> 
                                                 <p class="d-flex flex-column">
                                                     <span class="book_title"><b>'.$row['book_name'].'</b></span>
                                                     <span class="book_amount">Amount: '.$row['book_amount'].'</span>
@@ -100,24 +107,30 @@
                                             </div>
 
                                             <div class="rightSideContent">
-                                                <a href="#"><i class="fa-solid fa-trash"></i></a>
+                                                <a id="removeBtn" href="./delete_book.php?book_id='.$row['book_id'].'&user_id='.$_SESSION['sqlID'].'">
+                                                    <span class="material-symbols-outlined">delete</span>
+                                                </a>
                                             </div>
                                         </li>
                                     ';
                                 }
                             } else {
-                                echo '..............';
+                                echo 
+                                '
+                                    <p class="text-center">
+                                        You cart is empty!
+                                    </p>
+                                ';
                             }
 
                         ?>
                     </ul>
-
                 </div>
 
             </div>
 
-            <div class="row text-center">
-                <p> 
+            <div class="row text-center mt-3">
+                <p style="border-top: 1px solid orange;"> 
                     <b>
                         Total: 
                         <?php getUserTotalPrice($sql, $_SESSION['sqlID']); ?>
@@ -127,8 +140,8 @@
             </div>
 
             <div class="row">
-                <div class="buttons text-center d-flex flex-row justify-content-center mt-4">
-                    <a class="btn btn-outline-success m-1" href="./finish_order.php" class="finishOrder">FINISH ORDER</a>
+                <div class="buttons text-center d-flex flex-row justify-content-center">
+                    <a class="btn btn-outline-success m-1" href="./finish_order.php?total_price=<?php getUserTotalPrice($sql, $_SESSION['sqlID']); ?>" class="finishOrder">FINISH ORDER</a>
                     <a class="btn btn-outline-warning m-1" href="./library.php" class="gotoShop">BACK TO SHOPPING</a>
                 </div>
             </div>
