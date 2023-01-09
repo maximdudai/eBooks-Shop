@@ -17,7 +17,7 @@
                 
                 $totalPrice = $row['SUM(book_amount * book_price)'];
                 
-                echo $totalPrice;
+                // echo $totalPrice;
                 
             }
         }
@@ -133,7 +133,7 @@
                 <p style="border-top: 1px solid orange;"> 
                     <b>
                         Total: 
-                        <?php getUserTotalPrice($sql, $_SESSION['sqlID']); ?>
+                        <?php echo getUserTotalPrice($sql, $_SESSION['sqlID']); ?>
                         €
                     </b> 
                 </p>
@@ -141,7 +141,13 @@
 
             <div class="row">
                 <div class="buttons text-center d-flex flex-row justify-content-center">
-                    <a class="btn btn-outline-success m-1" href="./finish_order.php?total_price=<?php getUserTotalPrice($sql, $_SESSION['sqlID']); ?>" class="finishOrder">FINISH ORDER</a>
+                    <?php
+                        if(getUserTotalPrice($sql, $_SESSION['sqlID'])) {
+                            echo '
+                                <a class="btn btn-outline-success m-1" href="./finish_order.php?total_price='.getUserTotalPrice($sql, $_SESSION['sqlID']).'" class="finishOrder">FINISH ORDER</a>
+                            ';
+                        }
+                    ?>
                     <a class="btn btn-outline-warning m-1" href="./library.php" class="gotoShop">BACK TO SHOPPING</a>
                 </div>
             </div>

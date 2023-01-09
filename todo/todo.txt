@@ -1,0 +1,1 @@
+- button 'finish order' will not be visible if !totalPrice
