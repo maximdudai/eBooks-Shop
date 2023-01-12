@@ -23,10 +23,10 @@
             <div class="col-lg-12">
                 <ul class="nav nav-tabs justify-content-center">
                     <li class="nav-item">
-                        <a class="menuOption nav-link active" aria-current="page" href="#">Categories</a>
+                        <a class="menuButton menuCategory nav-link active" aria-current="page" href="#">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="menuOption nav-link" href="#">Sub Categories</a>
+                        <a class="menuButton menuSubCategory nav-link" href="#">Sub Categories</a>
                     </li>
                 </ul>
             </div>
@@ -56,14 +56,14 @@
                 <form action="category.php" method="post" class="mt-5">
                     <div class="addNewCategory border-bottom text-uppercase"><b>add new category</b></div>
                     <div class="mb-3 mt-2">
-                        <input type="text" class="form-control" id="categoryNameInput" aria-describedby="categoryName" placeholder="Category Name..">
+                        <input type="text" class="form-control" id="categoryNameInput" aria-describedby="categoryName" placeholder="Category Name.." required>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
 
             <div class="col-md-5 mt-5 addSubCategory d-none">
-
+                <!-- ! TODO -->
             </div>
         
         </div>
