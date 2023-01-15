@@ -7,6 +7,7 @@
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+        // ADD NEW CATEGORY
         if(isset($_POST['addNewCategory'])) {
             
             $newCategory = mysqli_real_escape_string($sql, $_POST['newCategoryName']);
@@ -28,6 +29,16 @@
                 }
             }            
         }
+        // END ADD NEW CATEGORY
+
+        // ADD NEW SUB CATEGORY
+
+        if(isset($_POST['manageSubCategory'])) {
+            echo 'hekoasd';
+        }
+
+        // END ADD NEW SUB CATEGORY
+
     }
 
 ?>
@@ -70,7 +81,7 @@
                                 echo '
                                     <li class="d-flex justify-content-between align-items-center p-1">
                                         <span>'.$row['category_name'].'</span>
-                                        <a id="removeBtn" href="./delete_category.php?category_id='.$row['ID'].'">
+                                        <a id="removeBtn" href="./del_category/delete_category.php?category_id='.$row['ID'].'">
                                             <span class="material-symbols-outlined">delete</span>
                                         </a>
                                     </li>
@@ -112,7 +123,13 @@
                                         <tr>
                                             <th scope="row" class="align-items-center">'.$row['sub_category_name'].'</th>
                                             <td>'.$row['for_category_name'].'</td>
-                                            <td><span role="button" tabindex="0" class="material-symbols-outlined">edit_note</span></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-primary">
+                                                    <a href="./manage_sub_cat/manage_sub_cat.php?sub_cat_id='.$row['ID'].'&sub_cat_name='.$row['sub_category_name'].'&for_cat_id='.$row['for_category_id'].'">
+                                                        <span role="button" tabindex="0" class="material-symbols-outlined">edit_note</span>
+                                                    </a>
+                                                </button>
+                                            </td>
                                         </tr>
                                     ';
                                 }
@@ -153,9 +170,7 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
-        
         </div>
-
     </div>
 
     <?php require('../../../../components/footer/footer.php'); ?>
