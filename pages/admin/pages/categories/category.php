@@ -4,6 +4,32 @@
 
     require('../../../../connection/database.php');
     require_once('../../../../components/notify/notify.php');
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+        if(isset($_POST['addNewCategory'])) {
+            
+            $newCategory = mysqli_real_escape_string($sql, $_POST['newCategoryName']);
+
+            if(strlen($newCategory)) {
+
+                $newcat_query = "SELECT `category_name` FROM `categories` WHERE `category_name` = '$newCategory'";
+                $newcat_sendquery = mysqli_query($sql, $newcat_query);
+
+                if(!mysqli_num_rows($newcat_sendquery)) {
+
+                    mysqli_query($sql, "INSERT INTO `categories` (category_name) VALUES ('$newCategory')");
+                    displayNotify('New category has been added: '.$newCategory);
+                }
+                else {
+                    echo '
+                        <script>alert("This category already exists!");</script>
+                    ';
+                }
+            }            
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +60,7 @@
             <div class="col-md-5 mt-5 addCategory active">
                 <ul>
                     <?php
-                        $formatQuery = "SELECT category_name FROM categories";
+                        $formatQuery = "SELECT * FROM categories";
                         $executeQuery = mysqli_query($sql, $formatQuery);
 
                         if(mysqli_num_rows($executeQuery)) {
@@ -44,7 +70,9 @@
                                 echo '
                                     <li class="d-flex justify-content-between align-items-center p-1">
                                         <span>'.$row['category_name'].'</span>
-                                        <span role="button" tabindex="0" class="material-symbols-outlined">delete</span>
+                                        <a id="removeBtn" href="./delete_category.php?category_id='.$row['ID'].'">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </a>
                                     </li>
                                 ';
                             }
@@ -55,9 +83,9 @@
                 <form action="category.php" method="post" class="mt-5">
                     <div class="addNewCategory border-bottom text-uppercase"><b>add new category</b></div>
                     <div class="mb-3 mt-2">
-                        <input type="text" class="form-control" id="categoryNameInput" aria-describedby="categoryName" placeholder="Category Name.." required>
+                        <input type="text" name="newCategoryName" class="form-control" id="categoryNameInput" aria-describedby="categoryName" placeholder="Category Name.." required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button name="addNewCategory" type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
 

@@ -16,9 +16,6 @@
             while($row = mysqli_fetch_array($executeQuery)) {
                 
                 $totalPrice = $row['SUM(book_amount * book_price)'];
-                
-                // echo $totalPrice;
-                
             }
         }
 
