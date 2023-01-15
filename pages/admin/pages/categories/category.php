@@ -29,16 +29,6 @@
                 }
             }            
         }
-        // END ADD NEW CATEGORY
-
-        // ADD NEW SUB CATEGORY
-
-        if(isset($_POST['manageSubCategory'])) {
-            echo 'hekoasd';
-        }
-
-        // END ADD NEW SUB CATEGORY
-
     }
 
 ?>
@@ -124,7 +114,7 @@
                                             <th scope="row" class="align-items-center">'.$row['sub_category_name'].'</th>
                                             <td>'.$row['for_category_name'].'</td>
                                             <td>
-                                                <button type="submit" class="btn btn-primary">
+                                            <button type="submit" class="btn btn-primary">
                                                     <a href="./manage_sub_cat/manage_sub_cat.php?sub_cat_id='.$row['ID'].'&sub_cat_name='.$row['sub_category_name'].'&for_cat_id='.$row['for_category_id'].'">
                                                         <span role="button" tabindex="0" class="material-symbols-outlined">edit_note</span>
                                                     </a>

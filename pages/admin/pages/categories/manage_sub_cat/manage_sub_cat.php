@@ -1,30 +1,20 @@
 <?php
-    // error_reporting(0);
+    error_reporting(0);
 
     include('../../../../../connection/database.php');
 
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
-        
-        if(isset($_GET['sub_cat_id']) && isset($_GET['sub_cat_name']) && isset($_GET['for_cat_id']))
-        {
-            $subCategory = mysqli_real_escape_string($sql, $_GET['sub_cat_id']);
-            $subCategoryName = mysqli_real_escape_string($sql, $_GET['sub_cat_name']);
-            $forCategoryId = mysqli_real_escape_string($sql, $_GET['for_cat_id']);
-        }
-    
+
+        $subCategory = mysqli_real_escape_string($sql, $_GET['sub_cat_id']);
+        $subCategoryName = mysqli_real_escape_string($sql, $_GET['sub_cat_name']);
+        $forCategoryId = mysqli_real_escape_string($sql, $_GET['for_cat_id']);
+
         if(isset($_GET['finishManageSubCat'])) {
 
-            $newSubCat = $_GET['selectedNewSubCat'];
-            $newSubCatName = $_GET['newSubCatName'];
+            echo $_GET['sub_cat_id'];
 
-            if($subCategoryName != $newSubCatName || $forCategoryId != $newSubCat) {
-                $updateSubCat = mysqli_query($sql, "UPDATE `sub_categories` SET `sub_category_name` = '$newSubCatName', `for_category_id` = '$newSubCat' WHERE `ID` = '$subCategory'");
-
-                echo mysqli_affected_rows($sql);
-
-                // header("Location: ../category.php");
-                // die();
-            }
+            // header("Location: ../category.php");
+            // die();
         }
     }
 
@@ -84,14 +74,13 @@
                                 <?php
                                     $formatQuery = "SELECT * FROM categories";
                                     $execQuery = mysqli_query($sql, $formatQuery);
+
                                     if(mysqli_num_rows($execQuery)) {
                                         while($row = mysqli_fetch_array($execQuery)) {
+                                            
+                                            $selected = ($row['ID'] == $forCategoryId) ? 'selected="selected"' : '';
 
-                                            echo '
-                                                <option value="'.$row['ID'].'">
-                                                    '.$row['category_name'].'
-                                                </option>
-                                            ';
+                                            echo  '<option value="'. $row['ID'] .'"'.$selected.' >'.$row['category_name'].'</option>';
                                         }
                                     }
                                 ?>
