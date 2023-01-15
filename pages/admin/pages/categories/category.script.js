@@ -56,3 +56,4 @@ function changeVisibleCategory(type) {
 
     return true;
 };  
+

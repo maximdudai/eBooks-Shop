@@ -1,17 +1,8 @@
-<!-- 
-    - add an administrator {
-        an search input with name and down show result with button 
-        !admin ? add : remove
-    }
- -->
-
-<?php error_reporting(E_ERROR | E_PARSE);
+<?php 
+    error_reporting(0);
     session_start();
 
     include('./connection/database.php');
-
-
-
 ?>
 
 <!doctype html>
