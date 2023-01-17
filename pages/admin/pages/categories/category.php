@@ -114,11 +114,15 @@
                                             <th scope="row" class="align-items-center">'.$row['sub_category_name'].'</th>
                                             <td>'.$row['for_category_name'].'</td>
                                             <td>
-                                            <button type="submit" class="btn btn-primary">
-                                                    <a href="./manage_sub_cat/manage_sub_cat.php?sub_cat_id='.$row['ID'].'&sub_cat_name='.$row['sub_category_name'].'&for_cat_id='.$row['for_category_id'].'">
+                                                <form method="get" action="./manage_sub_cat/manage_sub_cat.php?edit_subcat">
+                                                    <input type="hidden" name="subCatID" value="'.$row['ID'].'" />
+                                                    <input type="hidden" name="subCatName" value="'.$row['sub_category_name'].'">
+                                                    <input type="hidden" name="subCatForCat" value="'.$row['for_category_id'].'">
+                                                    
+                                                    <button type="submit" id="'.$row['ID'].'">
                                                         <span role="button" tabindex="0" class="material-symbols-outlined">edit_note</span>
-                                                    </a>
-                                                </button>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     ';

@@ -5,16 +5,20 @@
 
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-        $subCategory = mysqli_real_escape_string($sql, $_GET['sub_cat_id']);
-        $subCategoryName = mysqli_real_escape_string($sql, $_GET['sub_cat_name']);
-        $forCategoryId = mysqli_real_escape_string($sql, $_GET['for_cat_id']);
+        $subCategory = mysqli_real_escape_string($sql, $_GET['subCatID']);
+        $subCategoryName = mysqli_real_escape_string($sql, $_GET['subCatName']);
+        $forCategoryId = mysqli_real_escape_string($sql, $_GET['subCatForCat']);
 
         if(isset($_GET['finishManageSubCat'])) {
 
-            echo $_GET['sub_cat_id'];
+            $newSubCatName = $_GET['newSubCatName'];
+            $selectedNewSubCat = $_GET['selectedNewSubCat'];
 
-            // header("Location: ../category.php");
-            // die();
+            $formatNewInfo = "UPDATE `sub_categories` SET `sub_category_name` = '$newSubCatName', `for_category_id` = '$selectedNewSubCat' WHERE `ID` = '$subCategory'";
+            $sendNewInfo = mysqli_query($sql, $formatNewInfo);
+
+            header("Location: ../category.php");
+            die();
         }
     }
 
@@ -80,7 +84,7 @@
                                             
                                             $selected = ($row['ID'] == $forCategoryId) ? 'selected="selected"' : '';
 
-                                            echo  '<option value="'. $row['ID'] .'"'.$selected.' >'.$row['category_name'].'</option>';
+                                            echo  '<option value="'.$row['ID'].'"'.$selected.'>'.$row['category_name'].'</option>';
                                         }
                                     }
                                 ?>
@@ -88,7 +92,7 @@
                         </div>
 
                     </div>
-                    <button name="finishManageSubCat" type="submit" class="btn btn-primary">Submit</button>
+                    <input type="submit" name="finishManageSubCat" value="Submit">
                 </form>
             </div>
         </div>

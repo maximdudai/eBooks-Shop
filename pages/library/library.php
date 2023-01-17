@@ -1,14 +1,3 @@
-
-
-
-<!-- 
-
-    getting book id details {name, price, amount}
-    save into DB
-
- -->
-
-
 <?php error_reporting(0);
 
     session_start();
@@ -109,8 +98,6 @@
                             }
                         ?>
                     </select>
-
-
                     <input class="d-none" type="submit" value="" id="submitCategory">
                 </form>
             </div>
