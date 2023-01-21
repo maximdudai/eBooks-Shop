@@ -1,7 +1,6 @@
 <?php
     session_start();
     include('navbar-style.php');
-    include('./logout.php');
 
     function displayUserAccount() {
         echo '

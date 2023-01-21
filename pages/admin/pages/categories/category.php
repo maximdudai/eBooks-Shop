@@ -2,8 +2,8 @@
     error_reporting(0);
     session_start();
 
-    require('../../../../connection/database.php');
-    require_once('../../../../components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    require_once($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -29,6 +29,16 @@
                 }
             }            
         }
+
+        if(isset($_POST['addNewSubCategory'])) {
+
+            $subCategoryNameInput = mysqli_real_escape_string($sql, $_POST['subCategoryNameInput']);
+            $bookTypeSelected = $_POST['bookTypeSelected'];
+
+            mysqli_query($sql, "INSERT INTO `sub_categories` (sub_category_name, for_category_id) VALUES ('$subCategoryNameInput', '$bookTypeSelected')");
+            displayNotify('New Sub Category added: '.$subCategoryNameInput);
+        }
+
     }
 
 ?>
@@ -36,12 +46,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <?php 
-        require('../../../../components/head.php');
+        require($_SERVER['DOCUMENT_ROOT'].'/shop/components/head.php');
         require('./category.style.php');
     ?>
 <body>
     
-    <?php require('../../../../components/navbar/navbar.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
 
     <div class="container mt-5">
 
@@ -71,8 +81,8 @@
                                 echo '
                                     <li class="d-flex justify-content-between align-items-center p-1">
                                         <span>'.$row['category_name'].'</span>
-                                        <a id="removeBtn" href="./del_category/delete_category.php?category_id='.$row['ID'].'">
-                                            <span class="material-symbols-outlined">delete</span>
+                                        <a id="removeBtn" href="./manage_category/edit_category.php?category_id='.$row['ID'].'">
+                                            <span class="material-symbols-outlined">settings</span>
                                         </a>
                                     </li>
                                 ';
@@ -105,44 +115,42 @@
 
                             $query = "SELECT * FROM `sub_categories` ORDER BY `for_category_id`";
                             $execQuery = mysqli_query($sql, $query);
-
+                            
                             if(mysqli_num_rows($execQuery)) {
 
                                 while($row = mysqli_fetch_array($execQuery)) {
+
+                                    $getCategoryInfo = mysqli_query($sql, "SELECT `category_name` FROM `categories` WHERE ID = ".$row['ID']."");
+                                    $categoryInfo = mysqli_fetch_assoc($getCategoryInfo);
+                                    $categoryName = $categoryInfo['category_name'];
+
                                     echo '
                                         <tr>
                                             <th scope="row" class="align-items-center">'.$row['sub_category_name'].'</th>
-                                            <td>'.$row['for_category_name'].'</td>
+                                            <td>'.$categoryName.'</td>
                                             <td>
-                                                <form method="get" action="./manage_sub_cat/manage_sub_cat.php?edit_subcat">
-                                                    <input type="hidden" name="subCatID" value="'.$row['ID'].'" />
-                                                    <input type="hidden" name="subCatName" value="'.$row['sub_category_name'].'">
-                                                    <input type="hidden" name="subCatForCat" value="'.$row['for_category_id'].'">
-                                                    
-                                                    <button type="submit" id="'.$row['ID'].'">
-                                                        <span role="button" tabindex="0" class="material-symbols-outlined">edit_note</span>
-                                                    </button>
-                                                </form>
+                                                <a href="./manage_sub_cat/manage_sub_cat.php?subCatId='.$row['ID'].'">
+                                                    <span role="button" tabindex="0" class="material-symbols-outlined">edit_note</span>
+                                                </a>
                                             </td>
                                         </tr>
                                     ';
                                 }
-
                             }
-
                         ?>
                     </tbody>
                 </table>
+
                 <form action="category.php" method="post" class="mt-5">
                     <div class="addNewSubCategory border-bottom text-uppercase"><b>add new sub category</b></div>
-                    <div class="mb-3 mt-2 d-flex flex-row justify-content-between">
-                        <div class="inputSubCategory w-100">
-                            <input type="text" class="form-control" id="subCategoryNameInput" aria-describedby="subCategoryName" placeholder="Sub Category Name.." required>
+                    <div class="row m-2 justify-content-between">
+                        <div class="col-md-5 mb-3 inputSubCategory">
+                            <input type="text" class="form-control" name="subCategoryNameInput" aria-describedby="subCategoryName" placeholder="Sub Category Name.." required>
                         </div>
                         
-                        <div class="categoryOption">
+                        <div class="col-md-5 categoryOption">
                             <!--  onchange="reloadPageWithCategory();" -->
-                            <select id="bookCategory" name="bookTypeSelected" class="p-2">
+                            <select id="bookCategory" name="bookTypeSelected" class="p-2 border" style="cursor:pointer;">
                                 <?php 
                                     $sendQuery = mysqli_query($sql, "SELECT * FROM `categories`");
                                     $getResult = mysqli_num_rows($sendQuery);
@@ -161,13 +169,13 @@
                         </div>
 
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" name="addNewSubCategory" class="btn btn-primary mt-3">Submit</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <?php require('../../../../components/footer/footer.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/footer/footer.php'); ?>
 
     <script type="text/javascript" src="./category.script.js"></script>
 </body>

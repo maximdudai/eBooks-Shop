@@ -1,38 +1,49 @@
 <?php
     error_reporting(0);
+    include($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
 
-    include('../../../../../connection/database.php');
+    $subCatId = $_GET['subCatId'];
 
-    if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $subCatQuery = mysqli_query($sql, "SELECT * FROM `sub_categories` WHERE `ID` = '$subCatId'");
 
-        $subCategory = mysqli_real_escape_string($sql, $_GET['subCatID']);
-        $subCategoryName = mysqli_real_escape_string($sql, $_GET['subCatName']);
-        $forCategoryId = mysqli_real_escape_string($sql, $_GET['subCatForCat']);
+    // URL MANIPULATION
+    if(!mysqli_num_rows($subCatQuery))
+    {
+        header("Location: ../category.php");
+        die();
+    }
+    $subCatInfo = mysqli_fetch_assoc($subCatQuery);
 
-        if(isset($_GET['finishManageSubCat'])) {
+    // FORM VARIABLES
+    $subCategoryName = $subCatInfo['sub_category_name'];
 
-            $newSubCatName = $_GET['newSubCatName'];
-            $selectedNewSubCat = $_GET['selectedNewSubCat'];
+    $currCategory = mysqli_query($sql, "SELECT * FROM `categories` WHERE `ID` = ".$subCatInfo['for_category_id']."");
+    $categoryInfo = mysqli_fetch_assoc($currCategory);
+    $categoryName = $categoryInfo['category_name'];
+    $forCategoryId = $categoryInfo['ID'];
 
-            $formatNewInfo = "UPDATE `sub_categories` SET `sub_category_name` = '$newSubCatName', `for_category_id` = '$selectedNewSubCat' WHERE `ID` = '$subCategory'";
-            $sendNewInfo = mysqli_query($sql, $formatNewInfo);
+    // ----------------------------------------------------------------------------------
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['finishManageSubCat'])) {
+
+            $newSubCatName = $_POST['newSubCatName'];
+            $selectedNewSubCat = $_POST['selectedNewSubCat'];
+
+            mysqli_query($sql, "UPDATE `sub_categories` SET `sub_category_name` = '$newSubCatName', `for_category_id` = '$selectedNewSubCat' WHERE `ID` = '$subCatId'");
 
             header("Location: ../category.php");
             die();
-        }
     }
-
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
     <?php 
-        require('../../../../../components/head.php');
+        require($_SERVER['DOCUMENT_ROOT'].'/shop/components/head.php');
     ?>
 <body>
     
-    <?php require('../../../../../components/navbar/navbar.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
 
     <div class="container mt-5 justify-content-center w-50">
 
@@ -45,9 +56,10 @@
             </div>
 
             <div class="col-md-7">
-                <form>
+                <form method="post">
                     <div class="mb-3">
                         <label for="newSubCatName" class="form-label">Sub Category Name</label>
+                        <input type="hidden" name="subCatID" value="<?= $subCategory ?>">
                         <input type="text" class="form-control" name="newSubCatName" id="newSubCatName" aria-describedby="newSubCat"
                             value="<?php echo $subCategoryName ?>" required>
                     </div>
@@ -57,15 +69,7 @@
                                 <span class="currentCategory">
                                     Current Category:
                                 </span>
-                                <?php
-                                    $categoryName = mysqli_query($sql, "SELECT `category_name` FROM `categories` WHERE `ID` = '$forCategoryId'");
-
-                                    if(mysqli_num_rows($categoryName)) {
-                                        while($catName = mysqli_fetch_array($categoryName)) {
-                                            echo $catName['category_name'];
-                                        }
-                                    }
-                                ?>
+                                <?= $categoryName ?>
                             </label>
                         </div>
                         
@@ -98,6 +102,6 @@
         </div>
     </div>
 
-    <?php require('../../../../../components/footer/footer.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/footer/footer.php'); ?>
 </body>
 </html>

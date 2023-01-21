@@ -1,6 +1,6 @@
 <?php 
-    error_reporting(0);
-    include("../../../../connection/database.php");
+    // error_reporting(0);
+   include($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
 
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
