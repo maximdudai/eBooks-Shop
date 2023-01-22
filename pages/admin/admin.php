@@ -1,22 +1,19 @@
-<?php error_reporting(E_ERROR | E_PARSE);
+<?php 
+    error_reporting(0);
     session_start();
 
-    require('../../connection/database.php');
-    require_once('../../components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
     <?php 
-        require('../../components/head.php');
-        require('./admin.style.php');
+        require($_SERVER['DOCUMENT_ROOT'].'/shop/components/head.php');
     ?>
 <body>
-    
-    <?php require('../../components/navbar/navbar.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
 
-
-    <div class="container hereWeGo">
+    <div class="container hereWeGo" style="margin-top: 10%;">
         <div class="row justify-content-center align-items-center ">
             
             <!-- manage categories -->
@@ -69,15 +66,13 @@
                     </p>
                 </div>
                 <div class="card-footer bg-transparent border-success">
-                    <a href="#" class="d-flex align-items-center justify-content-center">Manage<span class="material-symbols-outlined">settings</span></a>
+                    <a href="./pages/users/users.php" class="d-flex align-items-center justify-content-center">Manage<span class="material-symbols-outlined">settings</span></a>
                 </div>
             </div>
 
         </div>
     </div>
-    
 
-    <?php require('../../components/footer/footer.php'); ?>
-
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/footer/footer.php'); ?>
 </body>
 </html>
