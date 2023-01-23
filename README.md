@@ -2,9 +2,9 @@
 
 Final Project: Online Bookstore
 
-* Front End
+* FRONT END
   - Bootstrap
   - JavaScript
 
-* Back End
+* BACK END
   - PHP
