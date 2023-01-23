@@ -3,6 +3,8 @@
     session_start();
 
     require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    require_once($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
+
 
     $user_id = mysqli_real_escape_string($sql, $_GET['user']);
 
@@ -15,12 +17,23 @@
             $userLastName = mysqli_real_escape_string($sql, $_POST['userLastName']);
             $validUserEmail = mysqli_real_escape_string($sql, $_POST['validUserEmail']);
             $validUserPassowrd = mysqli_real_escape_string($sql, $_POST['validUserPassowrd']);
-            
-            $userNotify = mysqli_real_escape_string($sql, $_POST['userNotify']);
-            $addToAdministrator = mysqli_real_escape_string($sql, $_POST['addToAdministrator']);
 
-            echo $addToAdministrator;
+            mysqli_query($sql, "UPDATE `users` SET `fName` = '$userFirstName', `lName` = '$userLastName', `password` = '$validUserPassowrd', `email` = '$validUserEmail' WHERE `ID` = '$user_id'");
+
+            displayNotify("User (#".$user_id.") details has been changed!");
         } 
+
+        if(isset($_POST['addToAdmin'])) {
+            
+            mysqli_query($sql, "UPDATE `users` SET `admin` = '1' WHERE `ID` = '$user_id'");
+            displayNotify("User (#".$user_id.") has been added to administrator.");
+
+        } else if (isset($_POST['removeFromAdmin'])) {
+            mysqli_query($sql, "UPDATE `users` SET `admin` = '0' WHERE `ID` = '$user_id'");
+            displayNotify("User (#".$user_id.") has been removed from administrator.");
+            
+        }
+
     }
 
     $formatUserData = mysqli_query($sql, "SELECT * FROM `users` WHERE `ID` = '$user_id'");
@@ -73,7 +86,6 @@
                         <div class="input-group align-items-center">
                             <input type="password" class="form-control" name="validUserPassowrd" id="validUserPassowrd"  aria-describedby="inputGroupPrepend2" value="<?php echo $userData['password'] ?>" required>
                             <span class="material-symbols-outlined user-select-none input-group-text" id="changePasswordVisibility" role="button">visibility</span>
-                            
                         </div>
                     </div>
 
@@ -85,10 +97,21 @@
                                 Notify the user for the changes made
                             </label>
                         </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" name="addToAdministrator" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                            <label class="form-check-label" for="flexSwitchCheckDefault">Add User to Administrator</label>
-                        </div>
+                        <?php
+                            $checkIfUserAdmin = mysqli_query($sql, "SELECT `admin`, `ID` FROM `users` WHERE `ID` = '$user_id'");
+                            $isUserAdmin = mysqli_fetch_assoc($checkIfUserAdmin);
+
+                            if($isUserAdmin['ID'] != $_SESSION['sqlID']) {
+                                $manageAdmin = !$isUserAdmin['admin'] ? "ADD TO" : "REMOVE FROM";
+                                $buttonName = !$isUserAdmin['admin'] ? "addToAdmin" : "removeFromAdmin";
+
+                                echo '
+                                    <div class="manageUserAdministrator mt-1">
+                                        <button type="submit" name="'.$buttonName.'" class="btn btn-primary btn-sm">'.$manageAdmin.' ADMIN</button>
+                                    </div>
+                                ';
+                            }
+                        ?>
                     </div>
 
                     <div class="col-12">
