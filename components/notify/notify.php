@@ -11,7 +11,7 @@
                     '.$text.'
                 </div>
             </div>
-            <script type="text/javascript" src="../../../shop/components/notify/notify.js"></script>
+            <script type="text/javascript" src="'.$_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.js"></script>
         ';
     }
 ?>
