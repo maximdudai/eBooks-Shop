@@ -10,7 +10,7 @@
             </button>
             <ul class="dropdown-menu" style="padding: 10px;">
                 <li><a class="nav-link profile-item" href="../../../shop/pages/library/user_cart.php">My Cart <i class="bi bi-cart"></i></a></li>
-                <li><a class="nav-link profile-item" href="../../pages/user/user-settings.php">Settings <i class="bi bi-gear"></i></a></li>
+                <li><a class="nav-link profile-item" href="../../shop/pages/user/user-settings.php">Settings <i class="bi bi-gear"></i></a></li>
                 <li><a class="nav-link profile-item" href="../../../shop/pages/contact/contact.php">Support <i class="bi bi-info-circle"></i></a></li>
 
                 <li>
