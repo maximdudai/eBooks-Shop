@@ -60,7 +60,7 @@
 
         <div class="row justify-content-between align-items-center">
 
-            <div class="col-md-5">
+            <div class="col-md-3">
                 <div class="account-security"><h3>My Account Settings</h3></div>
                 <div class="row">
                     <form method="post">
@@ -97,16 +97,92 @@
                 </div>
             </div>
 
-            <div class="col-sm-3 text-center">
-                <div class="account-settings"><h3>My Account History</h3></div>
-                <ul class="list-group">
-                    <li class="list-group-item"><button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">My Order History</button></li>
-                    <li class="list-group-item"><button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">My Help Tickets</button></li>
-                </ul>
-            </div>
+            <div class="col-md-7">
+                <!-- user orders -->
+                <div class="row">
+                    <div class="col-title"><h3>Your Orders</h3> <hr /></div>
+                    <div class="col-sm">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Book</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <?php
+                                        $user_id = $_SESSION['sqlID'];
+                                        $getUserOders = "SELECT * FROM `user_orders` WHERE `userID` = '$user_id'";
+                                        $userOrders = mysqli_query($sql, $getUserOders);
 
+                                        if(mysqli_num_rows($userOrders)) {
+
+                                            while($row = mysqli_fetch_array($userOrders)) {
+                                                echo '
+                                                    <tr>
+                                                        <th scope="row">'.$row['ID'].'</th>
+                                                        <td>'.$row['bookName'].'</td>
+                                                        <td>'.$row['amount'].'</td>
+                                                        <td>'.$row['orderDate'].'</td>
+                                                    </tr>
+                                                ';
+                                            }
+
+                                        }
+                                    ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- users tickets -->
+                <div class="row mt-5">
+                    <div class="col-title"><h3>Your Help Tickets</h3> <hr /></div>
+                    <div class="col-sm">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <?php
+                                        $user_id = $_SESSION['sqlID'];
+                                        $getUserOders = "SELECT * FROM `users_support` WHERE `user_id` = '$user_id'";
+                                        $userOrders = mysqli_query($sql, $getUserOders);
+
+                                        if(mysqli_num_rows($userOrders)) {
+
+                                            while($row = mysqli_fetch_array($userOrders)) {
+                                                echo '
+                                                    <tr>
+                                                        <th scope="row">'.$row['ID'].'</th>
+                                                        <td>'.$row['date'].'</td>
+                                                        <td>
+                                                            <button type="submit" style="background: none; border: 0;">
+                                                                <span class="material-symbols-outlined">info</span>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ';
+                                            }
+
+                                        }
+                                    ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
+
+    <!-- <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">My Help Tickets</button> -->
     <!-- User History Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
