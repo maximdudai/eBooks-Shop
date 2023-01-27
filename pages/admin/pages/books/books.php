@@ -13,7 +13,15 @@
 <body>
     <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
 
-    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                
+            </div>
+        </div>
+
+        <div class="row"></div>
+    </div>
 
     <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/footer/footer.php'); ?>
 </body>
