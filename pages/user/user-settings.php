@@ -163,9 +163,7 @@
                                                         <th scope="row">'.$row['ID'].'</th>
                                                         <td>'.$row['date'].'</td>
                                                         <td>
-                                                            <button type="submit" style="background: none; border: 0;">
-                                                                <span class="material-symbols-outlined">info</span>
-                                                            </button>
+                                                            <a href="./tickets/user-tickets.php?ticket_id='.$row['ID'].'"><span class="material-symbols-outlined">info</span></a>
                                                         </td>
                                                     </tr>
                                                 ';
