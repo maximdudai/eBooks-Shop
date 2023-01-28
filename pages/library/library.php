@@ -2,23 +2,16 @@
     error_reporting(0);
     session_start();
 
-    require('../../connection/database.php');
-    require_once('../../components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/functions/functions.php');
+
 
     $searchLivro = mysqli_real_escape_string($sql, $_POST['search_book']);
     $bookCategoryID = mysqli_real_escape_string($sql, $_POST['bookTypeSelected']);
 
     if(isset($_POST['clearSearch'])) {
         header("Location: library.php");
-    }
-
-    function displayImageFromDatabase($con, $b_id){
-        $getBookImage = "SELECT img_url, img_name FROM `stock` WHERE `ID` = '$b_id'";
-        $queryBookImage = mysqli_query($con, $getBookImage);
-
-        $imageInfo = mysqli_fetch_assoc($queryBookImage);
-
-        echo '<img class="img-fluid" style="width: 256px;" src=data:image;base64,'.$imageInfo['img_url'].' alt="'.$imageInfo['img_name'].'"/>';
     }
 
     function addItemToCart($sql, $bookid, $price, $name, $bookamount) {

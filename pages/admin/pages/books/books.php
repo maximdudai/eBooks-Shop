@@ -3,13 +3,17 @@
     session_start();
 
     require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/functions/functions.php');
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if(isset($_POST['addNewBook'])) {
 
             $newBookName = mysqli_real_escape_string($sql, $_POST['newBookName']);
+            
             $bookDescription = mysqli_real_escape_string($sql, $_POST['bookDescription']);
+            $bookDescriptionTrim = trim($bookDescription);
+
             $newBookPrice = mysqli_real_escape_string($sql, $_POST['newBookPrice']);
             $newBookCategory = mysqli_real_escape_string($sql, $_POST['newBookCategory']);
 
@@ -17,7 +21,7 @@
             $name = $_FILES['image']['name'];
             $image = base64_encode(file_get_contents(addslashes($image)));
 
-            mysqli_query($sql, "INSERT INTO `stock` (livroName, livroPrice, livroDescription, livroCategory, img_url, img_name) VALUES ('$newBookName', '$newBookPrice', '$bookDescription', '$newBookCategory', '$image', '$name')");
+            mysqli_query($sql, "INSERT INTO `stock` (livroName, livroPrice, livroDescription, livroCategory, img_url, img_name) VALUES ('$newBookName', '$newBookPrice', '$bookDescriptionTrim', '$newBookCategory', '$image', '$name')");
         }
     }
 
@@ -54,7 +58,7 @@
                                         echo '
                                             <tr>
                                                 <th scope="row">'.$row['livroName'].'</th>
-                                                <td><a href="edit_book.php?book_id='.$row['ID'].'"><span class="material-symbols-outlined">settings</span></a></td>
+                                                <td><a href="edit_book/edit_book.php?book_id='.$row['ID'].'"><span class="material-symbols-outlined">settings</span></a></td>
                                             </tr>
                                         ';
                                     }
@@ -67,7 +71,6 @@
 
             <div class="col-sm-5">
                 <div class="row">
-                <!-- enctype="multipart/form-data" -->
                     <form method="POST" enctype="multipart/form-data">
 
                         <div class="mb-3">
