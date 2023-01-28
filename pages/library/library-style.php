@@ -33,7 +33,7 @@
         margin-left: 20px;
     }
 
-    .book-image img {
+    .book-image .book-png {
         max-width: 256px;
     }
     #bookAmount {

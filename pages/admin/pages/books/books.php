@@ -3,6 +3,24 @@
     session_start();
 
     require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+        if(isset($_POST['addNewBook'])) {
+
+            $newBookName = mysqli_real_escape_string($sql, $_POST['newBookName']);
+            $bookDescription = mysqli_real_escape_string($sql, $_POST['bookDescription']);
+            $newBookPrice = mysqli_real_escape_string($sql, $_POST['newBookPrice']);
+            $newBookCategory = mysqli_real_escape_string($sql, $_POST['newBookCategory']);
+
+            $image = $_FILES['image']['tmp_name'];
+            $name = $_FILES['image']['name'];
+            $image = base64_encode(file_get_contents(addslashes($image)));
+
+            mysqli_query($sql, "INSERT INTO `stock` (livroName, livroPrice, livroDescription, livroCategory, img_url, img_name) VALUES ('$newBookName', '$newBookPrice', '$bookDescription', '$newBookCategory', '$image', '$name')");
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +67,8 @@
 
             <div class="col-sm-5">
                 <div class="row">
-                    <form method="POST">
+                <!-- enctype="multipart/form-data" -->
+                    <form method="POST" enctype="multipart/form-data">
 
                         <div class="mb-3">
                             <label for="newBookName" class="form-label">Book Name</label>
@@ -69,7 +88,7 @@
                         <div class="mb-3">
                             <div class="category">
                                 <label for="category" class="form-label">Category</label>
-                                <select id="category">
+                                <select id="category" name="newBookCategory">
                                     <option value="None" disabled selected>Select Category..</option>
                                     <?php
                                         $bookCategories = mysqli_query($sql, "SELECT * FROM `categories` ORDER BY ID");
@@ -89,13 +108,12 @@
                         <div class="book-image mt-5">
                             <div class="mb-3">
                                 <label for="formFileSm" class="form-label">Book Image</label>
-                                <input class="form-control form-control-sm" id="formFileSm" type="file" required>
+                                <input class="form-control form-control-sm" id="formFileSm" name="image" type="file" accept="image/*">
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary mb-3">Submit</button>
+                        <button type="submit" name="addNewBook" class="btn btn-primary mb-3">ADD BOOK</button>
                     </form>
-
                 </div>
             </div>
         </div>
