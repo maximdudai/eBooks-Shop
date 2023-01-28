@@ -3,8 +3,10 @@
 Final Project: Online Bookstore
 
 * FRONT END
+  - HTML5
+  - CSS3
   - Bootstrap
-  - JavaScript
 
 * BACK END
   - PHP
+w

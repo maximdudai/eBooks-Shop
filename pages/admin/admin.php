@@ -49,7 +49,7 @@
                     </p>
                 </div>
                 <div class="card-footer bg-transparent border-success">
-                    <a href="#" class="d-flex align-items-center justify-content-center">Manage<span class="material-symbols-outlined">settings</span></a>
+                    <a href="./pages/books/books.php" class="d-flex align-items-center justify-content-center">Manage<span class="material-symbols-outlined">settings</span></a>
                 </div>
             </div>
             

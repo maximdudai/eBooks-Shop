@@ -33,7 +33,7 @@
         margin-left: 20px;
     }
 
-    .book-image img {
+    .book-image .book-png {
         max-width: 256px;
     }
     #bookAmount {
@@ -41,5 +41,20 @@
     }
     .description p {
         font-size: 16px;
+    }
+
+    @media only screen and (max-width: 778px) {
+        .livro {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .title__buttons {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+        }
+        .title__buttons .book-title h3 {
+            font-size: 1.15rem !important;
+        }
     }
 </style>

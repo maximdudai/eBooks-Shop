@@ -1,9 +1,11 @@
-<?php error_reporting(0);
-
+<?php 
+    error_reporting(0);
     session_start();
 
-    require('../../connection/database.php');
-    require_once('../../components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/functions/functions.php');
+
 
     $searchLivro = mysqli_real_escape_string($sql, $_POST['search_book']);
     $bookCategoryID = mysqli_real_escape_string($sql, $_POST['bookTypeSelected']);
@@ -60,7 +62,8 @@
 <html lang="en">
 <?php
     require('../../components/head.php');
-    require('./library-style.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/pages/library/library-style.php');
+    
 ?>
 <body>
     
@@ -122,26 +125,23 @@
                             $bookQuery = mysqli_query($sql, $databaseQuery);
                             $queryResult = mysqli_num_rows($bookQuery);
 
+
                             if($queryResult) {
                                 while($row = mysqli_fetch_array($bookQuery)) {
                                     echo 
                                     '
                                         <li class="list-element" id='.$row['ID'].'>
-
                                             <div class="livro d-flex flex-row align-items-center">
                                                 <div class="book-image">
-                                                    <img src="../../images/livro1.jpg" alt=".." class="img-fluid book-png" />
+                                                    '.displayImageFromDatabase($sql, $row['ID']).'
                                                 </div>
-
                                                 <div class="book d-flex flex-column">
-
                                                     <div class="title__buttons d-flex flex-row justify-content-between">
                                                         <div class="book-title">
                                                             <h3>
                                                                 '.$row['livroName'].' &mdash; '.$row['livroPrice'].'$
                                                             </h3>
                                                         </div>
-
                                                         <div class="book-buttons d-flex flex-row">
                                                             <div class="add-to-cart m-1">
                                                             
@@ -150,20 +150,14 @@
                                                                     <input type="hidden" name="productID" value="'.$row['ID'].'">
                                                                     <input name="addToCartButton" type="submit" id="'.$row['ID'].'" value="Add To Cart" name="addToCart" />
                                                                 </form>
-
-
                                                             </div>
-
                                                         </div>
-
                                                     </div>
-
                                                         <div class="description">
                                                             <p>
                                                                 '.$row['livroDescription'].'
                                                             </p>
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </li>
