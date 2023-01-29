@@ -147,7 +147,7 @@
                             ';
                         }
                     ?>
-                    <a class="btn btn-outline-warning m-1" href="./library.php" class="gotoShop">BACK TO SHOPPING</a>
+                    <a class="btn btn-outline-warning m-1" href="<?php echo LIBRARY_PAGE; ?>" class="gotoShop">BACK TO SHOPPING</a>
                 </div>
             </div>
         </div>

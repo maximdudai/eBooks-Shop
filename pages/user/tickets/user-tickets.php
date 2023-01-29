@@ -3,12 +3,15 @@
     session_start();
 
     require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
-    require_once($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/config/constants.php');
+
 
     $ticket_id = mysqli_real_escape_string($sql, $_GET['ticket_id']);
     $user_id = $_SESSION['sqlID'];
+    $fromAdmin = mysqli_real_escape_string($sql, $_GET['from_admin']);
 
-    $checkTicketDetails = mysqli_query($sql, "SELECT * FROM `users_support` WHERE `user_id` = '$user_id' AND `ID` = '$ticket_id'");
+    $checkTicketDetails = mysqli_query($sql, "SELECT * FROM `users_support` WHERE `ID` = '$ticket_id'");
 
     if(!mysqli_num_rows($checkTicketDetails)) {
         header("../user-settings.php");
@@ -16,6 +19,11 @@
     }
     $ticketDetails = mysqli_fetch_assoc($checkTicketDetails);
 
+    $backPage = '';
+    if($fromAdmin)
+        $backPage = MANAGE_USER."?user=".$ticketDetails['user_id']."";
+    else
+        $backPage = SETTINGS_PAGE;
 
 ?>
 
@@ -64,7 +72,7 @@
                             ?>
                         </b>
                     </div>
-                    <button class="btn btn-sm btn-outline-success mt-3"><a href="../user-settings.php" class="d-flex align-items-center"><b>BACK</b> <span class="material-symbols-outlined">undo</span></a></button>
+                    <button class="btn btn-sm btn-outline-success mt-3"><a href="<?php echo $backPage ?>" class="d-flex align-items-center"><b>BACK</b> <span class="material-symbols-outlined">undo</span></a></button>
                 </div>
             </div>
         </div>

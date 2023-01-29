@@ -37,8 +37,8 @@
             </div>
 
             <div class="col-md-5 mt-5 text-center">
-                <a href="../library/library.php" class="btn btn-lg btn-outline-success">SHOP</a>
-                <a href="../contact/contact.php" class="btn btn-lg btn-outline-success">Contact US</a>
+                <a href="<?php echo LIBRARY_PAGE; ?>" class="btn btn-lg btn-outline-success">SHOP</a>
+                <a href="<?php echo CONTACT_PAGE; ?>" class="btn btn-lg btn-outline-success">Contact US</a>
             </div>
 
         </div>

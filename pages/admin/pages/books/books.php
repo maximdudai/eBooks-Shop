@@ -99,7 +99,7 @@
 
                                             while($row = mysqli_fetch_array($bookCategories)) {
                                                 echo '
-                                                    <option value="'.$row['category_name'].'">'.$row['category_name'].'</option>
+                                                    <option value="'.$row['ID'].'">'.$row['category_name'].'</option>
                                                 ';
                                             }
                                         }

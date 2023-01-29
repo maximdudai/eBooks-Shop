@@ -26,7 +26,7 @@
 <body>
     <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
 
-    <div class="container">
+    <div class="container mt-5">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-5" id="show-mail-img">
                 <img src="https://img.icons8.com/bubbles/500/important-mail.png" id="send-image" alt="mail-img" class="img-fluid">

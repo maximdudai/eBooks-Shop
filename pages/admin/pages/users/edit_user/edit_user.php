@@ -57,7 +57,6 @@
     <div class="container" style="margin-top: 5%;">
         <div class="row align-items-center justify-content-between">
             <div class="col">
-
                 <form class="row g-3" method="post">
                     <!-- First Name -->
                     <div class="col-md-7">
@@ -118,48 +117,90 @@
                         <button class="btn btn-primary" name="changeUserDetails" type="submit">Submit Changes</button>
                     </div>
                 </form>
-
             </div>
+            
+            <div class="col-md">
+                <div class="col mt-1">
+                    <div class="row text-center">
+                        <div class="title mb-3" style="font-size: 1.5rem; border-bottom: 1px solid silver;">User Orders</div>
+                    </div>
 
-            <div class="col mt-1">
-                <div class="row text-center">
-                    <div class="title mb-3" style="font-size: 1.5rem; border-bottom: 1px solid silver;">User Orders</div>
-                </div>
+                    <div class="row">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Book</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <?php
+                                        $getUserOders = "SELECT * FROM `user_orders` WHERE `userID` = '$user_id'";
+                                        $userOrders = mysqli_query($sql, $getUserOders);
 
-                <div class="row">
-                    <table class="table text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Book</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                <?php
-                                    $getUserOders = "SELECT * FROM `user_orders` WHERE `userID` = '$user_id'";
-                                    $userOrders = mysqli_query($sql, $getUserOders);
+                                        if(mysqli_num_rows($userOrders)) {
 
-                                    if(mysqli_num_rows($userOrders)) {
+                                            while($row = mysqli_fetch_array($userOrders)) {
+                                                echo '
+                                                    <tr>
+                                                        <th scope="row">'.$row['ID'].'</th>
+                                                        <td>'.$row['bookName'].'</td>
+                                                        <td>'.$row['amount'].'</td>
+                                                        <td>'.$row['orderDate'].'</td>
+                                                    </tr>
+                                                ';
+                                            }
 
-                                        while($row = mysqli_fetch_array($userOrders)) {
-                                            echo '
-                                                <tr>
-                                                    <th scope="row">'.$row['ID'].'</th>
-                                                    <td>'.$row['bookName'].'</td>
-                                                    <td>'.$row['amount'].'</td>
-                                                    <td>'.$row['orderDate'].'</td>
-                                                </tr>
-                                            ';
                                         }
+                                    ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                                    }
-                                ?>
-                        </tbody>
-                    </table>
+                <div class="col mt-3">
+                    <div class="row text-center">
+                        <div class="title mb-3" style="font-size: 1.5rem; border-bottom: 1px solid silver;">User Help Tickets</div>
+                    </div>
+
+                    <div class="row">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <?php
+                                        $getUserOders = "SELECT * FROM `users_support` WHERE `user_id` = '$user_id'";
+                                        $userOrders = mysqli_query($sql, $getUserOders);
+
+                                        if(mysqli_num_rows($userOrders)) {
+
+                                            while($row = mysqli_fetch_array($userOrders)) {
+                                                echo '
+                                                    <tr>
+                                                        <th scope="row">'.$row['ID'].'</th>
+                                                        <td>'.$row['date'].'</td>
+                                                        <td>
+                                                            <a href="'.TICKETS_PAGE.'?ticket_id='.$row['ID'].'&from_admin=1"><span class="material-symbols-outlined">info</span></a>
+                                                        </td>
+                                                    </tr>
+                                                ';
+                                            }
+
+                                        }
+                                    ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 

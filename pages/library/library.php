@@ -5,13 +5,7 @@
     require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
     require($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
     require($_SERVER['DOCUMENT_ROOT'].'/shop/functions/functions.php');
-
-    $searchLivro = mysqli_real_escape_string($sql, $_POST['search_book']);
-    $bookCategoryID = mysqli_real_escape_string($sql, $_POST['bookTypeSelected']);
-
-    if(isset($_POST['clearSearch'])) {
-        header("Location: library.php");
-    }
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/config/constants.php');
 
     function addItemToCart($sql, $bookid, $price, $bookamount) {
 
@@ -36,7 +30,6 @@
 
         if(isset($_POST['addToCartButton']))
         {
-
             $book_id = $_POST['productID'];
 
             $dbQuery = "SELECT livroPrice FROM `stock` WHERE `ID` = $book_id";
@@ -50,8 +43,41 @@
 
                 addItemToCart($sql, $book_id, $bookInfo['livroPrice'], $produceAmount);
             }
-
         }
+        if(isset($_POST['search_book'])) {
+            $searchLivro = mysqli_real_escape_string($sql, $_POST['search_book']);
+        }
+
+
+        if(isset($_POST['submitFilters'])) {
+            $filterCategory = $_POST['searchByCategory'];
+            $filterSubCategory = $_POST['searchBySubCategory'];
+            $searchByPrice = $_POST['searchByPrice'];
+            $searchByRanking = $_POST['searchByRanking'];
+            
+            $filterBy = 'SELECT * FROM `stock`';
+        
+            if($filterCategory) {
+                $filterBy .= "WHERE `livroCategory` = '$filterCategory'";
+            }
+            if($filterSubCategory) {
+                if($$filterCategory) {
+                    $filterBy = "AND `livroSubCategory` = ".$filterSubCategory."";
+                }
+                else {
+                    displayNotify('To be able to choose a subcategory, you must first choose a category');
+                }
+            }
+            if($searchByPrice) {
+                $orderType = !$searchByPrice ? "DESC" : "ASC";
+                $filterBy .= "ORDER BY livroPrice ".$orderType."";
+            }
+            if($searchByRanking) {
+                $rankingType = !$searchByRanking ? "DESC" : "ASC";
+                $filterBy .= "ORDER BY totalOrders ".$orderType."";
+            }
+        }
+
     }   
 ?>
 <!DOCTYPE html>
@@ -74,36 +100,73 @@
             </form>
         </div>
 
-        <div class="search-by-category text-center">
+        <div class="container">
+            <div class="row mt-3 border-bottom">
+                <form method="POST">
+                    <div class="row p-4 justify-content-center">
+                        <div class="col-md-7 d-flex flex-row">
+                            <div class="col-sm-3">
+                                <select class="form-select" aria-label="Default select example" name="searchByCategory">
+                                <option selected disabled>Category..</option>
+                                <option value="0">Reset..</option>
+                                <?php 
+                                    $selectCategories = mysqli_query($sql, "SELECT * FROM categories ORDER BY ID");
+                                    if(mysqli_num_rows($selectCategories)) {
 
-            <div class="bookCategroy">
-                <form action="library.php" method="post">
-                    <label for="bookCategory">Choose by category:</label>
-                    <select id="bookCategory" name="bookTypeSelected" onchange="reloadPageWithCategory();">
-                        <option value="None" disabled selected>Select Item..</option>
-                        <option value="0">Todos</option>
-                        <?php 
-                            $sendQuery = mysqli_query($sql, "SELECT * FROM `categories`");
-                            $getResult = mysqli_num_rows($sendQuery);
+                                        while($row = mysqli_fetch_array($selectCategories)) {
+                                            
+                                            echo '<option value="'.$row['ID'].'">'.$row['category_name'].'</option>';
+                                        }
 
-                            if($getResult) 
-                            {
-                                while($rows = mysqli_fetch_array($sendQuery))
-                                {
-                                    echo '
-                                        <option value="'.$rows['ID'].'">'.$rows['category_name'].'</option>
-                                    ';
-                                }
-                            }
-                        ?>
-                    </select>
-                    <input class="d-none" type="submit" value="" id="submitCategory">
+                                    }
+                                ?>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-3" style="margin-left: 10px;">
+                                <select class="form-select" aria-label="Default select example" name="searchBySubCategory">
+                                <option selected disabled>Sub Category..</option>
+                                <?php 
+                                    $selectCategories = mysqli_query($sql, "SELECT * FROM sub_categories ORDER BY ID");
+                                    if(mysqli_num_rows($selectCategories)) {
+
+                                        while($row = mysqli_fetch_array($selectCategories)) {
+                                            echo '
+                                                <option value="'.$row['ID'].'">'.$row['sub_category_name'].'</option>
+                                            ';
+                                        }
+
+                                    }
+                                ?>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-3" style="margin-left: 10px;">
+                                <select class="form-select" aria-label="Default select example" name="searchByPrice">
+                                <option selected disabled>Price..</option>
+                                    <option value="0">More expensive</option>
+                                    <option value="1">Cheaper</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-3" style="margin-left: 10px;">
+                                <select class="form-select" aria-label="Default select example" name="searchByRanking">
+                                <option selected disabled>Ranking</option>
+                                    <option value="0">Most Purchased</option>
+                                    <option value="1">Least Purchased</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 col-6 mx-auto mt-3">
+                            <button class="btn btn-sm btn-outline-success" type="submit" name="submitFilters">
+                                <a href="<?php echo LIBRARY_PAGE."?category=".$filterCategory.""?>">Filter</a>
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
 
-        </div>
-
-        <div class="container">
             <div class="text-center p-0">
                 <div class="row justify-content-center">
                     <ul class="book-list">
@@ -113,9 +176,8 @@
                             
                             if($searchLivro) {
                                 $databaseQuery = "SELECT * FROM `stock` WHERE lower(`livroName`) like '%$searchLivro%'";
-                            }
-                            if($bookCategoryID) {
-                                $databaseQuery = "SELECT * FROM `stock` WHERE `livroCategory` = '$bookCategoryID'";
+                            } else if($filterBy) {
+                                $databaseQuery = $filterBy;
                             }
 
                             $bookQuery = mysqli_query($sql, $databaseQuery);
@@ -160,12 +222,12 @@
                                             <hr />
                                         ';
                                     }
-                                    if($searchLivro)
-                                        echo '<form method="post"><input class="resetPage" type="submit" value="reset page" name="clearSearch"></form>';
                                 } else {
                                     echo '
-                                        <h1>Something went wrong 😢</h1>
-                                        <p>There is no book with this parameters</p>
+                                        <div class="err-msg mt-5">
+                                            <h1>There is no books with this filters 😢</h1>
+                                        </div>
+                                        <a class="btn btn-outline-success" href="'.LIBRARY_PAGE.'">Reset Filters</a>
                                     ';
                                 }
                             ?>

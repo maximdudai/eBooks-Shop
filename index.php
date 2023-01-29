@@ -3,7 +3,8 @@
     session_start();
 
     include($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
-    
+
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/config/constants.php');
     require($_SERVER['DOCUMENT_ROOT'].'/shop/functions/functions.php');
     require($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
 
@@ -140,7 +141,7 @@
                                             <div class="col-md-5">
                                                 <p>'.$row['livroDescription'].'</p>
                                                 <div class="d-grid gap-2">
-                                                    <a class="btn btn-danger" href="./pages/library/library.php">Check our stock</a>
+                                                    <a class="btn btn-danger" href="'.LIBRARY_PAGE.'">Check our stock</a>
                                                 </div>
                                             </div>
                                         </div>

@@ -7,7 +7,6 @@
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') 
     {
-
         $sql_id = $_SESSION['sqlID'];
 
         if(isset($_POST['changeUserPassword'])) {
