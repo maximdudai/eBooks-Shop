@@ -2,24 +2,28 @@
     error_reporting(0); 
     session_start();
 
-    include('./auth.style.php');
-
-    include('../../connection/database.php');
-
-    $userName = mysqli_real_escape_string($sql, $_POST["firstName"]);
-    $userLastName = mysqli_real_escape_string($sql, $_POST["secondName"]);
-    $userMail = $_POST["userMail"];
-    $userPassword = mysqli_real_escape_string($sql, $_POST["userPassword"]);
-    
-    $loggedIn = false;
+    include($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        $userName = mysqli_real_escape_string($sql, $_POST["firstName"]);
+        $userLastName = mysqli_real_escape_string($sql, $_POST["secondName"]);
+        $userMail = mysqli_real_escape_string($sql, $_POST["userMail"]);
+        $userPassword = mysqli_real_escape_string($sql, $_POST["userPassword"]);
+
         if(!empty($userName) && !empty($userLastName)) {
 
-            insertUser($sql, $userName, $userLastName, $userMail, $userPassword);
+            $checkThisMail = mysqli_query($sql, "SELECT email FROM `users` WHERE `email` = '$userMail' LIMIT 1");
+            if(!mysqli_num_rows($checkThisMail)) {
 
-            header('location: ../../index.php');
-            die();
+                insertUser($sql, $userName, $userLastName, $userMail, $userPassword);
+                header('location: ../../index.php');
+                die();
+            }
+            else {
+                displayErrorMessage('Someone already registered using this email address!');
+            }
         }
         else {
             checkLogin($sql, $userMail, $userPassword);
@@ -46,7 +50,7 @@
                 die();
             }
         } else {
-            echo '<script>alert("Invalid email or password, please try again!");</script>';
+            displayErrorMessage('Invalid Email Address or Password! Please try again.');
         }
     }
 
@@ -60,12 +64,8 @@
         $_SESSION['isAdmin'] = $isAdmin;
     }
 
-    // function user_logIn($)
-
-    function displayErrorMessage() {
-        echo '
-
-        ';
+    function displayErrorMessage($err) {
+        displayNotify($err);
     }
 
 ?>
@@ -73,11 +73,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <?php include('../../components/head.php'); ?>
-<body>
-    <?php include('../../components/navbar/navbar.php'); ?>
+    <?php 
+        include($_SERVER['DOCUMENT_ROOT'].'/shop/components/head.php');
+        include('./auth.style.php');
+    ?>
 
-    <div class="container d-flex justify-content-center align-items-center" style="margin-top: 20vh;">
+<body>
+    <?php include($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
+
+    <div class="container d-flex justify-content-center align-items-center" style="margin-top: 10%;">
         <form action="auth.php" method="post">
             <div class="mb-3 reg-element hidden">
                 <label for="first-name" class="form-label">First Name</label>
@@ -97,10 +101,6 @@
                 <label for="user-password" class="form-label">Password</label>
                 <input type="password" class="form-control" name="userPassword" id="user-password">
             </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div>
             <div class="buttons d-flex justify-content-between align-items-center">
                 <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                 <a href="#" id="reg-btn" style="float: right !important; font-size: 14px;">Create an Account</a>
@@ -108,7 +108,7 @@
         </form>
     </div>
 
-    <?php include('../../components/footer/footer.php'); ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'].'/shop/components/footer/footer.php'); ?>
 
     <script>
 

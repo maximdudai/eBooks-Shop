@@ -120,10 +120,14 @@
                                         if(mysqli_num_rows($userOrders)) {
 
                                             while($row = mysqli_fetch_array($userOrders)) {
+
+                                                $getBookInfo = mysqli_query($sql, "SELECT livroName FROM `stock` WHERE `ID` = ".$row['bookID']."");
+                                                $bookInfo = mysqli_fetch_assoc($getBookInfo);
+
                                                 echo '
                                                     <tr>
                                                         <th scope="row">'.$row['ID'].'</th>
-                                                        <td>'.$row['bookName'].'</td>
+                                                        <td>'.$bookInfo['livroName'].'</td>
                                                         <td>'.$row['amount'].'</td>
                                                         <td>'.$row['orderDate'].'</td>
                                                     </tr>
@@ -176,25 +180,6 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
-    </div>
-
-    <!-- <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">My Help Tickets</button> -->
-    <!-- User History Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ....
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
             </div>
         </div>
     </div>

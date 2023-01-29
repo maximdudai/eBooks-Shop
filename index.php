@@ -3,18 +3,75 @@
     session_start();
 
     include($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    
     require($_SERVER['DOCUMENT_ROOT'].'/shop/functions/functions.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
+
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+        if(isset($_POST['send_button'])) {
+            $index_mail = mysqli_real_escape_string($sql, $_POST['index_mail']);
+
+            $checkMail = mysqli_query($sql, "SELECT email FROM `newsletter` WHERE `email` = '$index_mail'");
+
+            if(!mysqli_num_rows($checkMail)) {
+                mysqli_query($sql, "INSERT INTO `newsletter` (email) VALUES ('$index_mail')");
+                displayNotify('Email '."$index_mail".' has been added to our newsletter list!');
+            }
+            else
+                displayNotify('Email already exist on our list.');
+        }
+    }
 
 ?>
 
 <!doctype html>
 <html lang="en">
-    <?php include('./components/head.php'); ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'].'/shop/components/head.php'); ?>
 
-    <!-- <meta http-equiv="refresh" content="4"> -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
 
-    <body>
-    <?php include('./components/navbar/navbar.php'); ?>
+        /* quotes */
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+        html, body { 
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        #quotes-line {
+            font-size: 3rem;
+            color: black;
+            font-weight: 600;
+            font-family: 'Pacifico', cursive;
+        }
+        #q_content {
+            font-size: 1.5rem;
+            letter-spacing: 1.5px;
+            padding: 10px;
+        }
+        #q_f_letter {
+            font-size: 2.5rem;
+            color: black;
+            font-weight: bold;
+            border-bottom: 1px solid black;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 5px;
+            left: 5px;
+            right: 50;
+            z-index: 2025;
+            font-weight: 600;
+        }
+    </style>
+
+<body>
+    <?php include($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
 
     <header>
         <div class="container">
@@ -41,20 +98,15 @@
                 </div>
                 <!-- send news to mail -->
                 <div class="col-lg-5">
-                    <form action="" method="post">
+                    <div class="news-letter">
+                        <h3>SEND ME NEWSLETTER!</h3>
+                    </div>
+                    <form  method="post">
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="index_mail" placeholder="name@example.com">
+                            <input type="email" class="form-control" id="index_mail" name="index_mail" placeholder="name@example.com">
                         </div>
-                        <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" style="resize: none;" rows="3" maxlength="256"></textarea>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                            <label class="form-check-label" for="flexSwitchCheckChecked">Newsletter</label>
-                        </div>
-                        <input type="button" id="send_button" class="btn btn-outline-success disabled" value="Submit">
+                        <input type="submit" id="send_button" name="send_button" class="btn btn-outline-success disabled" value="Submit">
                     </form>
                     <hr />
                 </div>
@@ -62,7 +114,7 @@
         </div>
     </header>
 
-    <section class="our-library">
+    <section class="our-library mt-5">
         <div class="container">
             <div class="row">
                 <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
@@ -77,7 +129,6 @@
 
                                 $getImage = displayImageFromDatabase($sql, $row['ID']);
                                 $active = $row['ID'] == $rnd_img ? 'active' : '';
-                                
                                 $timeToChange = 4000;
 
                                 echo '
@@ -103,21 +154,7 @@
         </div>
     </section>
 
-    <?php include('./components/footer/footer.php'); ?>
-    <script>
-        let isActive = false;
-        document.getElementById("index_mail").addEventListener("input", () => {
-            let hasInput = document.getElementById("index_mail").value
-
-            if(!isActive || !hasInput.length) enableSubmit(hasInput.length ? true : false);
-        });
-        const enableSubmit = (toggle) => 
-        {
-            isActive = toggle;
-            document.getElementById("send_button").classList.toggle("disabled");
-        }
-
-    </script>
+    <?php include($_SERVER['DOCUMENT_ROOT'].'/shop/components/footer/footer.php'); ?>
 
     <script src="./script/script.js"></script>
     </body>

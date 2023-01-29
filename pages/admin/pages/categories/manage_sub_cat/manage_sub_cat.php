@@ -3,10 +3,8 @@
     include($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
 
     $subCatId = $_GET['subCatId'];
-
     $subCatQuery = mysqli_query($sql, "SELECT * FROM `sub_categories` WHERE `ID` = '$subCatId'");
 
-    // URL MANIPULATION
     if(!mysqli_num_rows($subCatQuery))
     {
         header("Location: ../category.php");
@@ -14,15 +12,12 @@
     }
     $subCatInfo = mysqli_fetch_assoc($subCatQuery);
 
-    // FORM VARIABLES
     $subCategoryName = $subCatInfo['sub_category_name'];
 
     $currCategory = mysqli_query($sql, "SELECT * FROM `categories` WHERE `ID` = ".$subCatInfo['for_category_id']."");
     $categoryInfo = mysqli_fetch_assoc($currCategory);
     $categoryName = $categoryInfo['category_name'];
     $forCategoryId = $categoryInfo['ID'];
-
-    // ----------------------------------------------------------------------------------
 
     if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['finishManageSubCat'])) {
 

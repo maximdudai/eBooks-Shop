@@ -2,55 +2,61 @@
     error_reporting(0);
     session_start();
 
-    require('../../connection/database.php');
-    require('../../components/notify/notify.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    
+    if($_SERVER["REQUEST_METHOD"] == 'GET') {
+        $totalPrice = $_GET['total_price'];
+    }
+    
+    $user_sql = $_SESSION['sqlID'];
 
+    if(isset($_GET['shopping'])) {
+        clearCart($sql, $_SESSION['sqlID']);
+        header("Location: ../../../shop/pages/library/library.php");
+        die();
+    }
+    if(isset($_GET['contactTeam'])) {
+        clearCart($sql, $_SESSION['sqlID']);
+        header("Location: ../../../shop/pages/contact/contact.php");
+        die();
+    }
+
+    function getBookAmount($sql) {
+        $user = $_SESSION['sqlID'];
+        $bookAmount = mysqli_query($sql, "SELECT book_amount FROM `user_cart` WHERE `user_id` = '$user'");
+        $amount = mysqli_fetch_assoc($bookAmount);
+        return $amount['book_amount'];
+    }
+
+    function clearCart($con, $s_id) {
+        $query = mysqli_query($con, "SELECT * FROM `user_cart` WHERE `user_id` = $s_id");
+        $rows = mysqli_num_rows($query);
+        if($rows) {
+            while($row = mysqli_fetch_array($query)) {
+                $bookID = $row['book_id'];
+                $bookName = $row['book_name'];
+
+                $cartBookAmount = getBookAmount($con);
+
+                mysqli_query($con, "INSERT INTO `user_orders` (userID, bookID, amount) VALUES ('$s_id', '$bookID', '$cartBookAmount')");
+
+                mysqli_query($con, "UPDATE `stock` SET `totalOrders` = `totalOrders` + '$cartBookAmount' WHERE `ID` = '$bookID'");
+            }
+        }
+        mysqli_query($con, "DELETE FROM `user_cart` WHERE `user_id` = $s_id");
+    }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
     <?php 
-        require('../../components/head.php');
+        require($_SERVER['DOCUMENT_ROOT'].'/shop/components/head.php');
         require('./finish_order_style.php');
-
-        if($_SERVER["REQUEST_METHOD"] == 'GET') {
-            $totalPrice = $_GET['total_price'];
-        }
-
-        
-        $user_sql = $_SESSION['sqlID'];
-        
-
-        if(isset($_GET['shopping'])) {
-            clearCart($sql, $_SESSION['sqlID']);
-            header("Location: ../../../shop/pages/library/library.php");
-            die();
-        }
-        if(isset($_GET['contactTeam'])) {
-            clearCart($sql, $_SESSION['sqlID']);
-            header("Location: ../../../shop/pages/contact/contact.php");
-            die();
-        }
-
-        function clearCart($con, $s_id) {
-            $query = mysqli_query($con, "SELECT * FROM `user_cart` WHERE `user_id` = $s_id");
-            $rows = mysqli_num_rows($query);
-            if($rows) {
-                while($row = mysqli_fetch_array($query)) {
-                    $bookID = $row['book_id'];
-                    $bookName = $row['book_name'];
-
-                    mysqli_query($con, "INSERT INTO `user_orders` (userID, bookID, bookName) VALUES ('$s_id', '$bookID', '$bookName')");
-                }
-            }
-            mysqli_query($con, "DELETE FROM `user_cart` WHERE `user_id` = $s_id");
-        }
-
     ?>
 <body>
     
-    <?php require('../../components/navbar/navbar.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
 
     <section class="finishOrder" id="paymentForm">
         <div class="container w-50">
@@ -138,8 +144,7 @@
                         </div>
                     </div>
 
-                        <input type="submit" id="finishPayment" name="orderPressed" value="Finish Payment">
-                        <!-- <button type="submit" class="btn btn-primary btn-sm" id="finishPayment">FINISH ORDER</button> -->
+                    <input type="submit" class="btn btn-primary btn-sm" id="finishPayment" name="orderPressed" value="Finish Payment">
                 </form>
             </div>
         </div>
@@ -179,7 +184,8 @@
         </div>
     </section>
 
-    <?php require('../../../shop/components/footer/footer.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/footer/footer.php'); ?>
+
     <script src="./finishOrder.js"></script>
 </body>
 </html>

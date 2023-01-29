@@ -1,4 +1,5 @@
 <?php
+    error_reporting(0);
     session_start();
     include('navbar-style.php');
 
@@ -49,7 +50,7 @@
 
         <div class="user-info">
             <?php 
-                if($_SESSION["loggedIn"]) {
+                if(isset($_SESSION['loggedIn'])) {
                     displayUserAccount();
                 } else {
                     echo '<a href="../../../shop/pages/auth/auth.php" class="auth-btn">Login <i class="bi bi-box-arrow-in-right"></i></a>';

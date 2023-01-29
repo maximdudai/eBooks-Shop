@@ -2,7 +2,6 @@
     include('footer-style.php');
 ?>
 
-
 <div class="footer">
     <div class="container text-center">
         <div class="row d-flex justify-content-between align-items-center justify-content-center">

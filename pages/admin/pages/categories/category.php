@@ -47,7 +47,6 @@
 <html lang="en">
     <?php 
         require($_SERVER['DOCUMENT_ROOT'].'/shop/components/head.php');
-        require('./category.style.php');
     ?>
 <body>
     
@@ -149,7 +148,6 @@
                         </div>
                         
                         <div class="col-md-5 categoryOption">
-                            <!--  onchange="reloadPageWithCategory();" -->
                             <select id="bookCategory" name="bookTypeSelected" class="p-2 border" style="cursor:pointer;">
                                 <?php 
                                     $sendQuery = mysqli_query($sql, "SELECT * FROM `categories`");

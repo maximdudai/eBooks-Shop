@@ -6,7 +6,6 @@
     require($_SERVER['DOCUMENT_ROOT'].'/shop/components/notify/notify.php');
     require($_SERVER['DOCUMENT_ROOT'].'/shop/functions/functions.php');
 
-
     $searchLivro = mysqli_real_escape_string($sql, $_POST['search_book']);
     $bookCategoryID = mysqli_real_escape_string($sql, $_POST['bookTypeSelected']);
 
@@ -14,11 +13,9 @@
         header("Location: library.php");
     }
 
-    function addItemToCart($sql, $bookid, $price, $name, $bookamount) {
+    function addItemToCart($sql, $bookid, $price, $bookamount) {
 
         $user_id = $_SESSION['sqlID'];
-
-
         $checkIfAvailable = mysqli_query($sql, "SELECT book_id, book_amount, book_price FROM `user_cart` WHERE `user_id` = $user_id AND `book_id` = $bookid");
         
         if(mysqli_num_rows($checkIfAvailable)) {
@@ -29,7 +26,7 @@
             }
 
         } else {
-            mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_name, book_amount) VALUES ('$user_id', '$bookid', '$price', '$name', '$bookamount')");
+            mysqli_query($sql, "INSERT INTO `user_cart` (user_id, book_id, book_price, book_amount) VALUES ('$user_id', '$bookid', '$price', '$bookamount')");
         }
 
         displayNotify('Your cart has been updated!');
@@ -42,17 +39,16 @@
 
             $book_id = $_POST['productID'];
 
-            $dbQuery = "SELECT * FROM `stock` WHERE `ID` = $book_id";
+            $dbQuery = "SELECT livroPrice FROM `stock` WHERE `ID` = $book_id";
             $dbExecuteQuery = mysqli_query($sql, $dbQuery);
 
             if(mysqli_num_rows($dbExecuteQuery)) {
 
+                $bookInfo = mysqli_fetch_assoc($dbExecuteQuery);
+
                 $produceAmount = $_POST['productQuantity'];
 
-                while($row = mysqli_fetch_array($dbExecuteQuery)) {
-
-                    addItemToCart($sql, $book_id, $row['livroPrice'], $row['livroName'], $produceAmount);
-                }
+                addItemToCart($sql, $book_id, $bookInfo['livroPrice'], $produceAmount);
             }
 
         }
@@ -61,13 +57,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-    require('../../components/head.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/components/head.php');
     require($_SERVER['DOCUMENT_ROOT'].'/shop/pages/library/library-style.php');
     
 ?>
 <body>
     
-    <?php require('../../components/navbar/navbar.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/navbar/navbar.php'); ?>
 
 
     <section class="available-books">
@@ -146,9 +142,9 @@
                                                             <div class="add-to-cart m-1">
                                                             
                                                                 <form method="post" action="library.php?user_cart">
-                                                                    <input name="productQuantity" type="number" value="1" min="1" max="10" />
+                                                                    <input name="productQuantity" class="btn btn-sm btn-outline-success" type="number" value="1" min="1" max="10" />
                                                                     <input type="hidden" name="productID" value="'.$row['ID'].'">
-                                                                    <input name="addToCartButton" type="submit" id="'.$row['ID'].'" value="Add To Cart" name="addToCart" />
+                                                                    <input name="addToCartButton" class="btn btn-sm btn-outline-success" type="submit" id="'.$row['ID'].'" value="Add To Cart" name="addToCart" />
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -179,7 +175,7 @@
         </div>
     </section>
 
-    <?php require('../../components/footer/footer.php'); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'].'/shop/components/footer/footer.php'); ?>
 
     <script src="./script.js"></script>
 </body>
