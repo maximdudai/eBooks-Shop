@@ -2,12 +2,16 @@
     error_reporting(0);
     session_start();
 
-    include('./connection/database.php');
+    include($_SERVER['DOCUMENT_ROOT'].'/shop/connection/database.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/shop/functions/functions.php');
+
 ?>
 
 <!doctype html>
 <html lang="en">
     <?php include('./components/head.php'); ?>
+
+    <!-- <meta http-equiv="refresh" content="4"> -->
 
     <body>
     <?php include('./components/navbar/navbar.php'); ?>
@@ -61,7 +65,40 @@
     <section class="our-library">
         <div class="container">
             <div class="row">
-                <?php require('./components/slider/carousel.php'); ?>
+                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <?php 
+                            $query = "SELECT ID, img_url, livroDescription FROM `stock` ORDER BY ID";
+                            $sendQuery = mysqli_query($sql, $query);
+                            $rows = mysqli_num_rows($sendQuery);
+                            $rnd_img = rand(1, $rows);
+
+                            while($row = mysqli_fetch_array($sendQuery)) {
+
+                                $getImage = displayImageFromDatabase($sql, $row['ID']);
+                                $active = $row['ID'] == $rnd_img ? 'active' : '';
+                                
+                                $timeToChange = 4000;
+
+                                echo '
+                                    <div class="carousel-item '.$active.'" data-bs-interval="'.$timeToChange.'">
+                                        <div class="row justify-content-center align-items-center">
+                                            <div class="col-md-5">
+                                                "'.$getImage.'"
+                                            </div>
+                                            <div class="col-md-5">
+                                                <p>'.$row['livroDescription'].'</p>
+                                                <div class="d-grid gap-2">
+                                                    <a class="btn btn-danger" href="./pages/library/library.php">Check our stock</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ';
+                            }
+                        ?>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

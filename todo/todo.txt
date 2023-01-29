@@ -1,8 +1,0 @@
-sub-cat {
-    modal with {
-        change categorie
-        change name
-        btn for remove
-        btn for save
-    }
-}
