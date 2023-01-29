@@ -19,4 +19,16 @@
 
     <!-- google icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+    <style>
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+            /* quotes */
+            @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+            html, body { 
+                height: 100%;
+                font-family: 'Montserrat', sans-serif;
+            }
+    </style>
 </head>
