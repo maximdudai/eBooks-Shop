@@ -8,5 +8,7 @@ Final Project: Online Bookstore
   - Bootstrap
 
 * BACK END
-  - PHP
-w
+  - PHP7
+  
+* Database
+  - MySQL
