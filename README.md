@@ -6,6 +6,7 @@ Final Project: Online Bookstore
   - HTML5
   - CSS3
   - Bootstrap
+  - JavaScript
 
 * BACK END
   - PHP7
